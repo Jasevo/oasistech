@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
 function getGreeting(): string {
@@ -10,6 +11,12 @@ function getGreeting(): string {
 }
 
 export function Greeting({ name }: { name: string }) {
+  const [greeting, setGreeting] = useState('Welcome')
+
+  useEffect(() => {
+    setGreeting(getGreeting())
+  }, [])
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -17,7 +24,7 @@ export function Greeting({ name }: { name: string }) {
       transition={{ duration: 0.4 }}
     >
       <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-gray-900">
-        {getGreeting()}, <span className="text-oasis-primary">{name}</span>
+        {greeting}, <span className="text-oasis-primary">{name}</span>
       </h1>
       <p className="text-gray-500 mt-1 text-sm">
         Here&apos;s an overview of your task engine.
