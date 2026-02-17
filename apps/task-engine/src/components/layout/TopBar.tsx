@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Search, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -17,13 +18,15 @@ export function TopBar({ userName = 'Admin' }: TopBarProps) {
     <header className="sticky top-0 z-40 bg-oasis-primary border-b border-oasis-primary/30">
       <div className="flex items-center justify-between h-14 px-4 lg:px-6">
         {/* Brand */}
-        <Link href="/" className="flex items-center gap-2.5 shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-oasis-accent flex items-center justify-center">
-            <span className="text-oasis-primary font-bold text-sm">O</span>
-          </div>
-          <span className="text-white font-semibold text-lg tracking-tight hidden sm:block">
-            Oasis<span className="text-oasis-accent">Tech</span>
-          </span>
+        <Link href="/" className="flex items-center shrink-0">
+          <Image
+            src="/logo.png"
+            alt="Doha Oasis"
+            width={160}
+            height={32}
+            className="h-7 w-auto"
+            priority
+          />
         </Link>
 
         {/* Search + User */}
