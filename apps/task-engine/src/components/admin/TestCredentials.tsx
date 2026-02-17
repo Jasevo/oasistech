@@ -28,11 +28,11 @@ const TestCredentials = () => {
       <div style={{ fontSize: '13px', color: '#374151', lineHeight: '1.8' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <span style={{ color: '#6b7280' }}>Email:</span>
-          <span style={{ fontFamily: 'monospace', fontWeight: 500 }}>admin@oasistech.co.za</span>
+          <span style={{ fontFamily: 'monospace', fontWeight: 500 }}>admin@oasistech.com</span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <span style={{ color: '#6b7280' }}>Password:</span>
-          <span style={{ fontFamily: 'monospace', fontWeight: 500 }}>OasisTest2024!</span>
+          <span style={{ fontFamily: 'monospace', fontWeight: 500 }}>OasisTest@2026</span>
         </div>
       </div>
       <p
