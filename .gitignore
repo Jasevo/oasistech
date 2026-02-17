@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Next.js
+.next/
+out/
+
+# Payload
+apps/task-engine/payload-types.ts
+apps/task-engine/importMap.js
+
+# SPFx
+apps/executive-inbox/dist/
+apps/executive-inbox/lib/
+apps/executive-inbox/sharepoint/solution/
+apps/executive-inbox/temp/
+
+# Build
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*

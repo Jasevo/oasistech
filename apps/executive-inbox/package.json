@@ -1,0 +1,30 @@
+{
+  "name": "executive-inbox",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=18.20.4 <19.0.0"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@fluentui/react": "^8.120.0",
+    "@microsoft/sp-core-library": "1.22.0",
+    "@microsoft/sp-http": "1.22.0",
+    "@microsoft/sp-property-pane": "1.22.0",
+    "@microsoft/sp-webparts-base": "1.22.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "tslib": "^2.6.0"
+  },
+  "devDependencies": {
+    "@microsoft/sp-build-web": "1.22.0",
+    "@microsoft/sp-module-interfaces": "1.22.0",
+    "typescript": "~5.4.5",
+    "@types/react": "17.0.2",
+    "@types/react-dom": "17.0.2"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "clean": "rimraf lib dist temp"
+  }
+}

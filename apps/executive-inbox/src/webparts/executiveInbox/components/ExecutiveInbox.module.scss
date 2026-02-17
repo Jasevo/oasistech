@@ -1,0 +1,113 @@
+.executiveInbox {
+  padding: 16px;
+  color: "[theme:bodyText, default: #333333]";
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid "[theme:neutralLight, default: #edebe9]";
+  }
+
+  .greeting {
+    font-size: 20px;
+    font-weight: 600;
+    color: "[theme:themePrimary, default: #0078d4]";
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: "[theme:bodySubtext, default: #605e5c]";
+    margin-top: 2px;
+  }
+
+  .emailList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .emailItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 16px;
+    border-bottom: 1px solid "[theme:neutralLight, default: #edebe9]";
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: "[theme:neutralLighter, default: #f3f2f1]";
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .emailItemUnread {
+    composes: emailItem;
+    font-weight: 600;
+    border-left: 3px solid "[theme:themePrimary, default: #0078d4]";
+  }
+
+  .emailHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .emailSender {
+    font-size: 14px;
+    font-weight: 600;
+    color: "[theme:bodyText, default: #333333]";
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+
+  .emailDate {
+    font-size: 12px;
+    color: "[theme:bodySubtext, default: #605e5c]";
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .emailSubject {
+    font-size: 14px;
+    color: "[theme:bodyText, default: #333333]";
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .emailPreview {
+    font-size: 13px;
+    color: "[theme:bodySubtext, default: #605e5c]";
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 400;
+  }
+
+  .errorContainer {
+    margin-top: 16px;
+  }
+
+  .loadingContainer {
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+  }
+
+  .emptyState {
+    text-align: center;
+    padding: 32px 16px;
+    color: "[theme:bodySubtext, default: #605e5c]";
+    font-size: 14px;
+  }
+}

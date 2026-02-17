@@ -1,0 +1,50 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "executive-inbox-client-side-solution",
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "OasisTech",
+      "websiteUrl": "https://oasistech.jasevo.com",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.22.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "Executive Inbox - Displays recent Outlook emails"
+      },
+      "longDescription": {
+        "default": "Executive Inbox web part displays the authenticated user's name and their 5 most recent Outlook emails using Microsoft Graph API."
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "Executive Inbox Feature",
+        "description": "Deploys the Executive Inbox web part",
+        "id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+        "version": "1.0.0.0"
+      }
+    ],
+    "webApiPermissionRequests": [
+      {
+        "resource": "Microsoft Graph",
+        "scope": "User.Read"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Mail.Read"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/executive-inbox.sppkg"
+  }
+}

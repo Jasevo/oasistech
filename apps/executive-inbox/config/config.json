@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "executive-inbox-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/executiveInbox/ExecutiveInboxWebPart.js",
+          "manifest": "./src/webparts/executiveInbox/ExecutiveInboxWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "ExecutiveInboxWebPartStrings": "lib/webparts/executiveInbox/loc/{locale}.js"
+  }
+}
