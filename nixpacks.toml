@@ -2,7 +2,7 @@
 nixPkgs = ["nodejs_20"]
 
 [phases.install]
-cmds = ["cd apps/task-engine && npm ci"]
+cmds = ["cd apps/task-engine && npm install"]
 
 [phases.build]
 cmds = ["cd apps/task-engine && npm run build"]
