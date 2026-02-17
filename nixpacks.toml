@@ -8,4 +8,4 @@ cmds = ["cd apps/task-engine && npm install"]
 cmds = ["cd apps/task-engine && npm run build"]
 
 [start]
-cmd = "cd apps/task-engine && node .next/standalone/server.js"
+cmd = "cd apps/task-engine && npx payload migrate && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public 2>/dev/null; node .next/standalone/server.js"
