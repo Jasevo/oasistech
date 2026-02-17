@@ -17,6 +17,9 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      afterLogin: ['./src/components/admin/TestCredentials#default'],
+    },
   },
   collections: [Tasks, Projects, ApiUsers],
   editor: lexicalEditor(),
