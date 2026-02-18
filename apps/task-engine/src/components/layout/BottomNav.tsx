@@ -27,15 +27,7 @@ export function BottomNav() {
   }
 
   return (
-    <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 pb-[env(safe-area-inset-bottom)]"
-      style={{
-        background: 'rgba(9, 36, 33, 0.9)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderTop: '1px solid rgba(255,255,255,0.08)',
-      }}
-    >
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-oasis-primary border-t border-white/10 pb-[env(safe-area-inset-bottom)]">
       <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {
           const Icon = item.icon

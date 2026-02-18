@@ -15,8 +15,8 @@ export function TopBar({ userName = 'Admin' }: TopBarProps) {
   const [searchQuery, setSearchQuery] = useState('')
 
   return (
-    <header className="sticky top-0 z-40 glass" style={{ background: 'rgba(9, 36, 33, 0.85)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-      <div className="flex items-center justify-between h-16 px-4 lg:px-6">
+    <header className="sticky top-0 z-40 bg-oasis-primary border-b border-oasis-primary/30">
+      <div className="flex items-center justify-between h-14 px-4 lg:px-6">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-3 shrink-0">
           <Image

@@ -6,7 +6,7 @@
   :root {
     --oasis-primary: #092421;
     --oasis-accent: #e3ba54;
-    --oasis-bg: #f0ebe3;
+    --oasis-bg: #EFF6FF;
     --oasis-sand: #d4c5a9;
     --oasis-cream: #faf6ef;
     --oasis-green: #1a5c47;
@@ -51,10 +51,11 @@
   }
 
   .glass-card {
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   }
 
   .stat-gradient-1 {

@@ -14,7 +14,7 @@ const config: Config = {
           'primary-light': '#0d3530',
           accent: '#e3ba54',
           'accent-light': '#f0d078',
-          bg: '#f0ebe3',
+          bg: '#EFF6FF',
           sand: '#d4c5a9',
           'sand-light': '#e8dcc8',
           cream: '#faf6ef',

@@ -40,9 +40,9 @@ export default async function DashboardPage() {
       {hasTasks ? (
         <>
           {/* Middle section: Recent Tasks + Progress Overview side by side */}
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            {/* Recent Tasks - takes 3 columns */}
-            <section className="lg:col-span-3 glass-card rounded-2xl p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Recent Tasks - takes 2 columns */}
+            <section className="lg:col-span-2 glass-card rounded-2xl p-6">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-base font-bold text-gray-900">Recent Tasks</h2>
                 <Link
@@ -55,8 +55,8 @@ export default async function DashboardPage() {
               <TaskList tasks={recent.tasks as never[]} layout="list" emptyMessage="No tasks yet. Create your first task in the admin panel." />
             </section>
 
-            {/* Progress Overview - takes 2 columns */}
-            <div className="lg:col-span-2">
+            {/* Progress Overview - takes 1 column */}
+            <div className="lg:col-span-1">
               <DashboardSummary
                 total={stats.total}
                 completed={stats.completed}
@@ -66,7 +66,7 @@ export default async function DashboardPage() {
           </div>
 
           {/* Bottom section: Quick Actions + Top Priorities + Team Activity */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <QuickActions />
             <TopPriorities tasks={priorityTasks} />
             <TeamActivity />

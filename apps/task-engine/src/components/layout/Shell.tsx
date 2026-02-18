@@ -14,21 +14,20 @@ interface ShellProps {
 export function Shell({ children, userName, openTaskCount }: ShellProps) {
   return (
     <div className="min-h-screen relative">
-      {/* Background image with overlay */}
+      {/* Faint background image with light blue overlay */}
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: 'url(/dohaoasis.jpg)' }}
       />
-      <div className="fixed inset-0 bg-gradient-to-br from-oasis-primary/70 via-oasis-primary/40 to-oasis-green/30" />
-      <div className="fixed inset-0 bg-oasis-bg/40 backdrop-blur-[2px]" />
+      <div className="fixed inset-0 bg-oasis-bg/[0.92]" />
 
       {/* Content */}
       <div className="relative z-10">
         <TopBar userName={userName} />
-        <div className="flex h-[calc(100vh-64px)]">
+        <div className="flex h-[calc(100vh-56px)]">
           <Sidebar taskCount={openTaskCount} />
           <main className="flex-1 overflow-y-auto scrollbar-thin pb-20 md:pb-0">
-            <div className="p-4 lg:p-8 max-w-[1400px] mx-auto">
+            <div className="p-4 lg:p-6 max-w-7xl mx-auto">
               {children}
             </div>
           </main>

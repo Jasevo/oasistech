@@ -43,13 +43,7 @@ export function Sidebar({ taskCount }: SidebarProps) {
     <motion.aside
       animate={{ width: collapsed ? 76 : 240 }}
       transition={{ duration: 0.2, ease: 'easeInOut' }}
-      className="hidden md:flex flex-col h-full relative"
-      style={{
-        background: 'rgba(9, 36, 33, 0.65)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderRight: '1px solid rgba(255,255,255,0.06)',
-      }}
+      className="hidden md:flex flex-col bg-oasis-primary-light border-r border-white/10 h-full relative"
     >
       <nav className="flex-1 py-6 px-3 space-y-1 overflow-y-auto scrollbar-thin">
         {navItems.map((item) => {
