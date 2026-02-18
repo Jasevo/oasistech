@@ -74,9 +74,6 @@ const TestCredentials = () => {
           ))}
         </div>
 
-        <p style={{ fontSize: '10px', color: '#9ca3af', marginTop: '10px', marginBottom: 0, textAlign: 'center' }}>
-          Or create your own account above
-        </p>
       </div>
 
       {/* Doha Oasis footer banner */}
