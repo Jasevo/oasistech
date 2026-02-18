@@ -14,12 +14,31 @@ interface ShellProps {
 export function Shell({ children, userName, openTaskCount }: ShellProps) {
   return (
     <div className="min-h-screen relative">
-      {/* Faint background image with light blue overlay */}
-      <div
-        className="fixed inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: 'url(/dohaoasis.jpg)' }}
-      />
-      <div className="fixed inset-0 bg-oasis-bg/[0.92]" />
+      {/* Background image — blurred, faint, with vignette edges */}
+      <div className="fixed inset-0 overflow-hidden">
+        <div
+          className="absolute inset-[-20px] bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(/dohaoasis.jpg)',
+            filter: 'blur(6px)',
+          }}
+        />
+        {/* Light blue overlay — lets image show through subtly */}
+        <div className="absolute inset-0 bg-oasis-bg/[0.78]" />
+        {/* Vignette — fades edges to solid light blue for smooth blending */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(ellipse at center, transparent 30%, var(--oasis-bg) 85%),
+              linear-gradient(to top, var(--oasis-bg) 0%, transparent 15%),
+              linear-gradient(to bottom, var(--oasis-bg) 0%, transparent 15%),
+              linear-gradient(to left, var(--oasis-bg) 0%, transparent 10%),
+              linear-gradient(to right, var(--oasis-bg) 0%, transparent 10%)
+            `,
+          }}
+        />
+      </div>
 
       {/* Content */}
       <div className="relative z-10">
