@@ -27,7 +27,7 @@ export function Shell({ children, userName, openTaskCount }: ShellProps) {
         <div className="flex h-[calc(100vh-56px)]">
           <Sidebar taskCount={openTaskCount} />
           <main className="flex-1 overflow-y-auto scrollbar-thin pb-20 md:pb-0">
-            <div className="p-4 lg:p-6 max-w-7xl mx-auto">
+            <div className="p-4 lg:px-8 lg:py-6">
               {children}
             </div>
           </main>
