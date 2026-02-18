@@ -23,17 +23,9 @@ export function CompletionRing({
         <svg className="w-full h-full -rotate-90" viewBox="0 0 140 140">
           <defs>
             <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%"   stopColor="#6366F1" />
-              <stop offset="50%"  stopColor="#8B5CF6" />
-              <stop offset="100%" stopColor="#06B6D4" />
+              <stop offset="0%"   stopColor="#e3ba54" />
+              <stop offset="100%" stopColor="#b8960e" />
             </linearGradient>
-            <filter id="ringGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
           </defs>
           {/* Track */}
           <circle
@@ -53,13 +45,12 @@ export function CompletionRing({
             initial={{ strokeDashoffset: circumference }}
             animate={{ strokeDashoffset: offset }}
             transition={{ duration: 1.3, ease: 'easeOut' }}
-            filter="url(#ringGlow)"
           />
         </svg>
         {/* Centre text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <motion.span
-            className="text-3xl font-black text-gray-900 tabular-nums"
+            className="text-3xl font-black text-[#092421] tabular-nums"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.6, duration: 0.45, type: 'spring' }}

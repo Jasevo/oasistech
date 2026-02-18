@@ -19,6 +19,8 @@ export default buildConfig({
     },
     components: {
       afterLogin: ['./src/components/admin/TestCredentials#default'],
+      beforeNavLinks: ['./src/components/admin/NavLogo#default'],
+      beforeDashboard: ['./src/components/admin/DashboardBanner#default'],
     },
   },
   collections: [Tasks, Projects, ApiUsers],

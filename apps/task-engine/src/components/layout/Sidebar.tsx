@@ -14,6 +14,7 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  ShieldCheck,
 } from 'lucide-react'
 
 const navItems = [
@@ -96,6 +97,31 @@ export function Sidebar({ taskCount }: SidebarProps) {
           )
         })}
       </nav>
+
+      {/* Admin button — pinned above collapse toggle */}
+      <div className="px-3 py-4 border-t border-white/10">
+        <Link
+          href="/admin"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group text-white/50 hover:text-oasis-accent hover:bg-oasis-accent/10"
+        >
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-transparent group-hover:bg-oasis-accent/10 transition-all duration-200">
+            <ShieldCheck className="w-[18px] h-[18px]" />
+          </div>
+          <AnimatePresence>
+            {!collapsed && (
+              <motion.span
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: 'auto' }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.15 }}
+                className="text-sm font-medium whitespace-nowrap overflow-hidden"
+              >
+                Admin Panel
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </Link>
+      </div>
 
       <button
         onClick={() => setCollapsed(!collapsed)}

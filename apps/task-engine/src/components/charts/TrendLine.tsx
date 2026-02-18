@@ -22,7 +22,7 @@ const CustomTooltip = ({
       ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
       : label
     return (
-      <div className="bg-gray-900 text-white text-xs px-3 py-2 rounded-xl shadow-xl">
+      <div className="bg-[#092421] text-white text-xs px-3 py-2 rounded-xl shadow-xl border border-[#e3ba54]/20">
         <p className="font-semibold">{formatted}</p>
         <p>{payload[0].value} task{payload[0].value !== 1 ? 's' : ''} created</p>
       </div>
@@ -44,22 +44,13 @@ export function TrendLine({ data }: TrendLineProps) {
     <ResponsiveContainer width="100%" height={260}>
       <AreaChart data={data} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
         <defs>
-          {/* Indigo → violet gradient fill */}
-          <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="#818CF8" stopOpacity={0.45} />
-            <stop offset="60%"  stopColor="#A78BFA" stopOpacity={0.15} />
-            <stop offset="100%" stopColor="#C4B5FD" stopOpacity={0} />
+          <linearGradient id="trendGradBrand" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#e3ba54" stopOpacity={0.25} />
+            <stop offset="60%"  stopColor="#e3ba54" stopOpacity={0.08} />
+            <stop offset="100%" stopColor="#e3ba54" stopOpacity={0} />
           </linearGradient>
-          {/* Glow filter for the stroke */}
-          <filter id="trendGlow" x="-10%" y="-30%" width="120%" height="160%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" vertical={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
         <XAxis
           dataKey="date"
           tick={{ fontSize: 10, fill: '#9CA3AF' }}
@@ -77,17 +68,16 @@ export function TrendLine({ data }: TrendLineProps) {
           tickLine={false}
           allowDecimals={false}
         />
-        <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#818CF8', strokeWidth: 1, strokeDasharray: '4 2' }} />
+        <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#e3ba54', strokeWidth: 1, strokeDasharray: '4 2' }} />
         <Area
           type="monotone"
           dataKey="tasks"
-          stroke="#6366F1"
-          strokeWidth={2.5}
-          fill="url(#trendGrad)"
+          stroke="#e3ba54"
+          strokeWidth={2}
+          fill="url(#trendGradBrand)"
           dot={false}
-          activeDot={{ r: 5, fill: '#6366F1', stroke: '#fff', strokeWidth: 2 }}
+          activeDot={{ r: 5, fill: '#e3ba54', stroke: '#fff', strokeWidth: 2 }}
           animationDuration={1200}
-          filter="url(#trendGlow)"
         />
       </AreaChart>
     </ResponsiveContainer>

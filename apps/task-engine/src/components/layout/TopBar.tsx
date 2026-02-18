@@ -22,9 +22,9 @@ export function TopBar({ userName = 'Admin' }: TopBarProps) {
           <Image
             src="/logo.png"
             alt="Doha Oasis"
-            width={160}
-            height={32}
-            className="h-8 w-auto"
+            width={110}
+            height={22}
+            className="h-6 w-auto"
             priority
           />
         </Link>

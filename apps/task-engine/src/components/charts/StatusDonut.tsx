@@ -6,17 +6,17 @@ interface StatusDonutProps {
   data: Array<{ name: string; value: number; color: string }>
 }
 
-// Rich non-green/gold colours for status
+/* Brand-aligned status palette — dark primary, gold, muted green */
 const statusColours: Record<string, string> = {
-  'To Do':       '#818CF8', // indigo-400
-  'In Progress': '#38BDF8', // sky-400
-  'Completed':   '#34D399', // emerald-400
+  'To Do':       '#c5cdc8',  // neutral grey-green
+  'In Progress': '#e3ba54',  // gold accent
+  'Completed':   '#092421',  // dark primary
 }
 
 const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ name: string; value: number }> }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-gray-900 text-white text-xs px-3 py-2 rounded-xl shadow-xl">
+      <div className="bg-[#092421] text-white text-xs px-3 py-2 rounded-xl shadow-xl border border-[#e3ba54]/20">
         <p className="font-semibold">{payload[0].name}</p>
         <p>{payload[0].value} tasks</p>
       </div>
@@ -36,7 +36,6 @@ export function StatusDonut({ data }: StatusDonutProps) {
     )
   }
 
-  // Override colours with our richer palette
   const enriched = data.map((d) => ({ ...d, color: statusColours[d.name] ?? d.color }))
 
   return (
@@ -49,7 +48,7 @@ export function StatusDonut({ data }: StatusDonutProps) {
             cy="50%"
             innerRadius={68}
             outerRadius={105}
-            paddingAngle={4}
+            paddingAngle={3}
             dataKey="value"
             animationBegin={0}
             animationDuration={900}
@@ -73,7 +72,7 @@ export function StatusDonut({ data }: StatusDonutProps) {
       </ResponsiveContainer>
       {/* Centre label */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none" style={{ paddingBottom: 36 }}>
-        <span className="text-3xl font-black text-gray-900 tabular-nums">{total}</span>
+        <span className="text-3xl font-black text-[#092421] tabular-nums">{total}</span>
         <span className="text-[11px] text-gray-400 font-medium mt-0.5">total tasks</span>
       </div>
     </div>

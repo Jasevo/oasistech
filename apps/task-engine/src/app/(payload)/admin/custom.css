@@ -1,0 +1,544 @@
+/*
+ * OasisTech Admin — Brand Theme Override
+ * Remaps Payload's CSS custom properties to the Doha Oasis palette.
+ * Dark nav (#092421) with gold accent (#e3ba54).
+ * Elevation scales are near-neutral with only a subtle green tint.
+ */
+
+/* ─── Base palette — subtle green-tinted neutrals ──────────── */
+:root {
+  --color-base-0:    #ffffff;
+  --color-base-50:   #f7f9f8;
+  --color-base-100:  #eef1f0;
+  --color-base-150:  #e2e7e6;
+  --color-base-200:  #d4dbd9;
+  --color-base-250:  #c2cbc8;
+  --color-base-300:  #adb8b6;
+  --color-base-350:  #96a3a1;
+  --color-base-400:  #7e8d8b;
+  --color-base-450:  #687876;
+  --color-base-500:  #556462;
+  --color-base-550:  #45524f;
+  --color-base-600:  #374340;
+  --color-base-650:  #2c3634;
+  --color-base-700:  #222c2a;
+  --color-base-750:  #1a2322;
+  --color-base-800:  #131c1a;
+  --color-base-850:  #0d1514;
+  --color-base-900:  #080f0e;
+  --color-base-950:  #040807;
+  --color-base-1000: #000000;
+
+  /* Layout */
+  --nav-width: 260px;
+  --style-radius-m: 6px;
+  --style-radius-l: 10px;
+
+  /* Typography */
+  --font-body: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+}
+
+/* ─── Light theme — near-white, subtle green undertone ─────── */
+html[data-theme=light],
+html:not([data-theme]) {
+  --theme-bg:              #f5f7f6;
+  --theme-input-bg:        #ffffff;
+  --theme-text:            #131c1a;
+  --theme-border-color:    rgba(9, 36, 33, 0.1);
+
+  --theme-elevation-0:     #ffffff;
+  --theme-elevation-50:    #f9fafa;
+  --theme-elevation-100:   #f0f2f1;
+  --theme-elevation-150:   #e5e9e8;
+  --theme-elevation-200:   #d7dddc;
+  --theme-elevation-250:   #c5cdcc;
+  --theme-elevation-300:   #b0bab9;
+  --theme-elevation-350:   #99a5a4;
+  --theme-elevation-400:   #808f8d;
+  --theme-elevation-450:   #6a7a78;
+  --theme-elevation-500:   #576664;
+  --theme-elevation-550:   #465352;
+  --theme-elevation-600:   #384442;
+  --theme-elevation-650:   #2d3735;
+  --theme-elevation-700:   #232c2a;
+  --theme-elevation-750:   #1a2322;
+  --theme-elevation-800:   #131c1a;
+  --theme-elevation-850:   #0d1413;
+  --theme-elevation-900:   #080e0d;
+  --theme-elevation-950:   #040807;
+  --theme-elevation-1000:  #000000;
+}
+
+/* ─── Dark theme — deep forest floor, neutral steps ────────── */
+html[data-theme=dark] {
+  --theme-bg:              #0a1e1c;
+  --theme-input-bg:        #0f2724;
+  --theme-text:            #e4eded;
+  --theme-border-color:    rgba(227, 186, 84, 0.12);
+
+  --theme-elevation-0:     #0a1e1c;
+  --theme-elevation-50:    #0f2724;
+  --theme-elevation-100:   #14302d;
+  --theme-elevation-150:   #1a3a36;
+  --theme-elevation-200:   #214440;
+  --theme-elevation-250:   #294e4a;
+  --theme-elevation-300:   #345b56;
+  --theme-elevation-350:   #406864;
+  --theme-elevation-400:   #4e7672;
+  --theme-elevation-450:   #5e8682;
+  --theme-elevation-500:   #6f9793;
+  --theme-elevation-550:   #84a9a5;
+  --theme-elevation-600:   #9abab7;
+  --theme-elevation-650:   #b1cbc8;
+  --theme-elevation-700:   #c8dbd9;
+  --theme-elevation-750:   #dae9e7;
+  --theme-elevation-800:   #e8f2f1;
+  --theme-elevation-850:   #f1f8f7;
+  --theme-elevation-900:   #f8fbfb;
+  --theme-elevation-950:   #fcfdfd;
+  --theme-elevation-1000:  #ffffff;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   NAV / SIDEBAR
+   ═══════════════════════════════════════════════════════════════ */
+.nav {
+  background: #092421 !important;
+  border-right: 1px solid rgba(227, 186, 84, 0.15) !important;
+  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.25) !important;
+}
+
+html[data-theme=light] .nav {
+  background: #092421 !important;
+}
+
+/* Nav links */
+.nav__link {
+  color: rgba(232, 245, 243, 0.65) !important;
+  border-radius: 8px !important;
+  padding: 6px 10px !important;
+  margin: 1px 0 !important;
+  transition: background 0.15s, color 0.15s !important;
+}
+
+.nav__link:hover,
+.nav__link:focus-visible {
+  background: rgba(227, 186, 84, 0.1) !important;
+  color: #e3ba54 !important;
+  text-decoration: none !important;
+}
+
+.nav__link.active,
+.nav__link:has(.nav__link-indicator) {
+  background: rgba(227, 186, 84, 0.15) !important;
+  color: #e3ba54 !important;
+  font-weight: 600 !important;
+}
+
+/* Active indicator → gold */
+.nav__link-indicator {
+  background: #e3ba54 !important;
+  width: 3px !important;
+  border-radius: 2px !important;
+}
+
+/* Nav label */
+.nav__label {
+  color: rgba(232, 245, 243, 0.35) !important;
+  font-size: 10px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
+/* Nav controls (logout, etc.) */
+.nav__controls a,
+.nav__controls button {
+  color: rgba(232, 245, 243, 0.5) !important;
+}
+
+.nav__controls a:hover,
+.nav__controls button:hover {
+  color: #e3ba54 !important;
+}
+
+/* Logo area in nav header */
+.nav__header {
+  background: #092421 !important;
+  border-bottom: 1px solid rgba(227, 186, 84, 0.1) !important;
+}
+
+/* Nav scrollbar */
+.nav__scroll::-webkit-scrollbar {
+  width: 4px !important;
+}
+.nav__scroll::-webkit-scrollbar-thumb {
+  background: rgba(227, 186, 84, 0.25) !important;
+  border-radius: 2px !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   APP HEADER / TOP BAR
+   ═══════════════════════════════════════════════════════════════ */
+.app-header {
+  background: #092421 !important;
+  border-bottom: 1px solid rgba(227, 186, 84, 0.15) !important;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* The __bg element that Payload fades in on scroll */
+.app-header__bg {
+  background: #092421 !important;
+}
+
+.template-default__header {
+  background: #092421 !important;
+}
+
+/* Hamburger / toggler */
+.app-header__mobile-nav-toggler svg,
+.template-default__nav-toggler svg {
+  color: rgba(232, 245, 243, 0.7) !important;
+}
+
+/* Step nav / breadcrumb in header */
+.step-nav a,
+.step-nav__last {
+  color: rgba(232, 245, 243, 0.7) !important;
+}
+
+.step-nav a:hover {
+  color: #e3ba54 !important;
+}
+
+.step-nav__chevron svg {
+  color: rgba(232, 245, 243, 0.3) !important;
+}
+
+/* Account avatar/button in header */
+.account__avatar {
+  background: rgba(227, 186, 84, 0.2) !important;
+  color: #e3ba54 !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Primary */
+.btn--style-primary,
+.btn--style-primary:visited {
+  background: #e3ba54 !important;
+  color: #092421 !important;
+  border: none !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+}
+
+.btn--style-primary:hover {
+  background: #d4a93e !important;
+  color: #092421 !important;
+}
+
+.btn--style-primary:active {
+  background: #c49830 !important;
+}
+
+/* Secondary */
+.btn--style-secondary {
+  border-color: rgba(9, 36, 33, 0.18) !important;
+  border-radius: 8px !important;
+  color: #131c1a !important;
+}
+
+html[data-theme=dark] .btn--style-secondary {
+  border-color: rgba(227, 186, 84, 0.2) !important;
+  color: #e4eded !important;
+}
+
+.btn--style-secondary:hover {
+  background: rgba(9, 36, 33, 0.05) !important;
+}
+
+html[data-theme=dark] .btn--style-secondary:hover {
+  background: rgba(227, 186, 84, 0.08) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   INPUTS
+   ═══════════════════════════════════════════════════════════════ */
+.field-type input[type=text],
+.field-type input[type=email],
+.field-type input[type=password],
+.field-type input[type=number],
+.field-type input[type=search],
+.field-type textarea,
+.field-type select,
+.rs__control {
+  border-radius: 8px !important;
+  border-color: var(--theme-elevation-150) !important;
+  transition: border-color 0.15s, box-shadow 0.15s !important;
+}
+
+.field-type input:focus,
+.field-type textarea:focus,
+.rs__control--is-focused {
+  border-color: #e3ba54 !important;
+  box-shadow: 0 0 0 3px rgba(227, 186, 84, 0.12) !important;
+  outline: none !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   CARDS / PANELS / DOCUMENT VIEWS
+   ═══════════════════════════════════════════════════════════════ */
+.render-fields,
+.document-fields__sidebar-wrap,
+.document-fields__main {
+  border-radius: 12px !important;
+}
+
+/* Document header area */
+.doc-header {
+  border-bottom-color: var(--theme-elevation-100) !important;
+}
+
+.doc-header__title {
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   TABLE ROWS
+   ═══════════════════════════════════════════════════════════════ */
+.table .cell:first-child,
+.table th:first-child {
+  border-radius: 8px 0 0 8px;
+}
+.table .cell:last-child,
+.table th:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.table tbody tr:hover {
+  background: rgba(9, 36, 33, 0.03) !important;
+}
+
+html[data-theme=dark] .table tbody tr:hover {
+  background: rgba(227, 186, 84, 0.05) !important;
+}
+
+/* Table header */
+.table thead th {
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: var(--theme-elevation-450) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   DASHBOARD — collection tiles
+   ═══════════════════════════════════════════════════════════════ */
+.dashboard__card-list .card {
+  border: 1px solid var(--theme-elevation-100) !important;
+  border-radius: 12px !important;
+  transition: border-color 0.15s, box-shadow 0.15s !important;
+  background: var(--theme-elevation-0) !important;
+}
+
+.dashboard__card-list .card:hover {
+  border-color: rgba(227, 186, 84, 0.35) !important;
+  box-shadow: 0 4px 16px rgba(9, 36, 33, 0.08) !important;
+}
+
+html[data-theme=dark] .dashboard__card-list .card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dashboard__card-list .card__title {
+  font-weight: 600 !important;
+}
+
+/* Dashboard heading */
+.dashboard h2,
+.dashboard__label {
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   COLLECTION LIST HEADER
+   ═══════════════════════════════════════════════════════════════ */
+.collection-list__header,
+.list-header {
+  border-bottom: 1px solid var(--theme-elevation-100) !important;
+  padding-bottom: 16px !important;
+  margin-bottom: 8px !important;
+}
+
+.list-header__title {
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   PILL / BADGE
+   ═══════════════════════════════════════════════════════════════ */
+.pill--style-light {
+  background: rgba(227, 186, 84, 0.1) !important;
+  color: #8a6a00 !important;
+  border-color: rgba(227, 186, 84, 0.25) !important;
+}
+
+html[data-theme=dark] .pill--style-light {
+  color: #e3ba54 !important;
+  background: rgba(227, 186, 84, 0.12) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   DRAWER / MODAL
+   ═══════════════════════════════════════════════════════════════ */
+.drawer__content {
+  background-color: var(--theme-bg) !important;
+  border-left: 1px solid var(--theme-elevation-100) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   LOGIN PAGE — immersive dark
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Full page background */
+.template-minimal {
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(26, 92, 71, 0.35) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 20%, rgba(227, 186, 84, 0.06) 0%, transparent 50%),
+    linear-gradient(160deg, #061b19 0%, #092421 40%, #0d2f2c 70%, #061b19 100%) !important;
+  min-height: 100vh !important;
+  position: relative !important;
+}
+
+/* Noise texture overlay for depth */
+.template-minimal::before {
+  content: '' !important;
+  position: fixed !important;
+  inset: 0 !important;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E") !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+/* Wider wrap for banner image */
+.template-minimal--width-normal .template-minimal__wrap {
+  max-width: 460px !important;
+  width: 100% !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Transparent wrapper so card floats */
+.template-minimal__wrap {
+  background: transparent !important;
+}
+
+/* ── Login card — scoped precisely ── */
+/* The form itself (login form container) */
+.login {
+  background: rgba(255, 255, 255, 0.97) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 0 0 1px rgba(227, 186, 84, 0.18),
+    0 20px 60px rgba(0, 0, 0, 0.45),
+    0 4px 16px rgba(0, 0, 0, 0.25) !important;
+  overflow: hidden !important;
+}
+
+html[data-theme=dark] .login {
+  background: rgba(13, 40, 38, 0.97) !important;
+  box-shadow:
+    0 0 0 1px rgba(227, 186, 84, 0.15),
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Gold accent bar at top of login card */
+.login::before {
+  content: '' !important;
+  display: block !important;
+  height: 3px !important;
+  background: linear-gradient(90deg, #e3ba54 0%, #f0d078 50%, #e3ba54 100%) !important;
+  width: 100% !important;
+}
+
+/* Login card inner padding */
+.login > * {
+  padding-left: 36px !important;
+  padding-right: 36px !important;
+}
+
+.login > *:first-child {
+  padding-top: 32px !important;
+}
+
+.login > *:last-child {
+  padding-bottom: 28px !important;
+}
+
+/* Login heading */
+.login h1,
+.login h2 {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: #131c1a !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 6px !important;
+}
+
+html[data-theme=dark] .login h1,
+html[data-theme=dark] .login h2 {
+  color: #e4eded !important;
+}
+
+.login p {
+  color: rgba(9, 36, 33, 0.5) !important;
+  font-size: 13px !important;
+}
+
+html[data-theme=dark] .login p {
+  color: rgba(232, 245, 243, 0.45) !important;
+}
+
+/* Logout / Create-first-user — same card treatment */
+.logout,
+.create-first-user {
+  background: rgba(255, 255, 255, 0.97) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 0 0 1px rgba(227, 186, 84, 0.18),
+    0 20px 60px rgba(0, 0, 0, 0.45),
+    0 4px 16px rgba(0, 0, 0, 0.25) !important;
+  overflow: hidden !important;
+  padding: 36px !important;
+}
+
+html[data-theme=dark] .logout,
+html[data-theme=dark] .create-first-user {
+  background: rgba(13, 40, 38, 0.97) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   FOCUS RING
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --accessibility-outline: 2px solid #e3ba54 !important;
+}
