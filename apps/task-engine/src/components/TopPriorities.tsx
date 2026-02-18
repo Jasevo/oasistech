@@ -20,7 +20,8 @@ export function TopPriorities({ tasks }: TopPrioritiesProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.35 }}
-      className="glass-card rounded-2xl overflow-hidden"
+      className="glass-card rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+      whileHover={{ scale: 1.01 }}
     >
       {/* Header */}
       <div className="bg-gradient-to-r from-oasis-primary to-oasis-green p-6">

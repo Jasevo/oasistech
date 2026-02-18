@@ -89,6 +89,27 @@ export async function fetchTaskStats() {
   }
 }
 
+export async function fetchUpcomingDeadlines(limit = 4) {
+  try {
+    const payload = await getPayloadClient()
+    const tasks = await payload.find({
+      collection: 'tasks',
+      where: {
+        status: { not_equals: 'completed' },
+        dueDate: { exists: true },
+      },
+      sort: 'dueDate',
+      limit,
+      depth: 1,
+      overrideAccess: true,
+    })
+    return { tasks: tasks.docs, error: null }
+  } catch (error) {
+    console.error('Failed to fetch upcoming deadlines:', error)
+    return { tasks: [], error: 'Failed to load deadlines.' }
+  }
+}
+
 export async function fetchRecentTasks(limit = 5) {
   try {
     const payload = await getPayloadClient()

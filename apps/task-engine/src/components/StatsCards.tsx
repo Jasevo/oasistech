@@ -22,7 +22,8 @@ function StatCard({ label, value, icon: Icon, index, subtitle, gradient, textLig
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className={`relative overflow-hidden rounded-2xl p-5 lg:p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-default ${gradient}`}
+      className={`relative overflow-hidden rounded-2xl p-5 lg:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-default ${gradient}`}
+      whileHover={{ scale: 1.02 }}
     >
       {/* Decorative circles */}
       <div className="absolute -right-4 -top-4 w-24 h-24 rounded-full bg-white/10" />

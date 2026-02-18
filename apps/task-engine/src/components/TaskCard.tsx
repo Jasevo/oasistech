@@ -46,7 +46,7 @@ export function TaskCard({ task, index }: TaskCardProps) {
       transition={{ delay: index * 0.05, duration: 0.3 }}
     >
       <Link href={`/tasks/${task.id}`} className="block group">
-        <article className="glass-card rounded-xl p-4 hover:shadow-lg hover:bg-white/85 transition-all duration-200 hover:-translate-y-0.5">
+        <article className="bg-gray-50 border border-gray-100 rounded-xl p-4 hover:bg-white hover:shadow-md hover:border-gray-200 transition-all duration-200 hover:-translate-y-0.5">
           <div className="flex items-start gap-3">
             {/* Status icon */}
             <div className={`w-9 h-9 rounded-xl ${statusBg} flex items-center justify-center shrink-0 mt-0.5`}>

@@ -5,16 +5,18 @@ import { WelcomeSection } from '@/components/WelcomeSection'
 import { QuickActions } from '@/components/QuickActions'
 import { DashboardSummary } from '@/components/DashboardSummary'
 import { TopPriorities } from '@/components/TopPriorities'
-import { fetchTaskStats, fetchRecentTasks } from '@/lib/tasks'
+import { UpcomingDeadlines } from '@/components/UpcomingDeadlines'
+import { fetchTaskStats, fetchRecentTasks, fetchUpcomingDeadlines } from '@/lib/tasks'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
-  const [stats, recent] = await Promise.all([
+  const [stats, recent, deadlines] = await Promise.all([
     fetchTaskStats(),
     fetchRecentTasks(5),
+    fetchUpcomingDeadlines(4),
   ])
 
   const userName = process.env.DASHBOARD_USER_NAME || 'Admin'
@@ -42,7 +44,7 @@ export default async function DashboardPage() {
           {/* Middle section: Recent Tasks + Progress Overview side by side */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Recent Tasks - takes 2 columns */}
-            <section className="lg:col-span-2 glass-card rounded-2xl p-6">
+            <section className="lg:col-span-2 glass-card rounded-2xl p-6 hover:shadow-lg transition-all duration-300">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-base font-bold text-gray-900">Recent Tasks</h2>
                 <Link
@@ -55,12 +57,15 @@ export default async function DashboardPage() {
               <TaskList tasks={recent.tasks as never[]} layout="list" emptyMessage="No tasks yet. Create your first task in the admin panel." />
             </section>
 
-            {/* Progress Overview - takes 1 column */}
-            <div className="lg:col-span-1">
+            {/* Right column: Progress Overview + Upcoming Deadlines stacked */}
+            <div className="lg:col-span-1 space-y-4">
               <DashboardSummary
                 total={stats.total}
                 completed={stats.completed}
                 inProgress={stats.inProgress}
+              />
+              <UpcomingDeadlines
+                tasks={deadlines.tasks as Array<{ id: string; title: string; dueDate: string; priority: string }>}
               />
             </div>
           </div>
@@ -84,7 +89,7 @@ export default async function DashboardPage() {
 
 function TeamActivity() {
   return (
-    <div className="glass-card rounded-2xl overflow-hidden">
+    <div className="glass-card rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
       {/* Header */}
       <div className="bg-gradient-to-r from-red-800 to-rose-600 p-6">
         <h2 className="text-lg font-bold text-white uppercase tracking-wider">

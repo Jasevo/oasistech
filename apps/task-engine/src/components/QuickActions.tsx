@@ -41,7 +41,8 @@ export function QuickActions() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.3 }}
-      className="glass-card rounded-2xl overflow-hidden"
+      className="glass-card rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+      whileHover={{ scale: 1.01 }}
     >
       {/* Header */}
       <div className="bg-gradient-to-r from-oasis-accent to-amber-400 p-6">
