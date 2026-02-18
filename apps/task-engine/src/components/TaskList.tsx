@@ -16,9 +16,10 @@ interface Task {
 interface TaskListProps {
   tasks: Task[]
   emptyMessage?: string
+  layout?: 'grid' | 'list'
 }
 
-export function TaskList({ tasks, emptyMessage }: TaskListProps) {
+export function TaskList({ tasks, emptyMessage, layout = 'grid' }: TaskListProps) {
   if (tasks.length === 0) {
     return (
       <EmptyState
@@ -30,7 +31,7 @@ export function TaskList({ tasks, emptyMessage }: TaskListProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div className={layout === 'list' ? 'space-y-2' : 'grid grid-cols-1 lg:grid-cols-2 gap-4'}>
       {tasks.map((task, index) => (
         <TaskCard key={task.id} task={task} index={index} />
       ))}

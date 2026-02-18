@@ -2,12 +2,13 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ExternalLink, FolderKanban, BarChart3, ArrowRight } from 'lucide-react'
+import { ExternalLink, FolderKanban, BarChart3, ArrowRight, CheckCircle2 } from 'lucide-react'
 
 const steps = [
-  { icon: ExternalLink, title: 'Create tasks', description: 'Head to the admin panel to create and manage tasks' },
-  { icon: FolderKanban, title: 'Organize into projects', description: 'Group related tasks into projects for better tracking' },
-  { icon: BarChart3, title: 'Monitor progress', description: 'Use analytics to track completion rates and trends' },
+  { icon: ExternalLink, title: 'Create your first task', description: 'Head to the admin panel to create and manage tasks' },
+  { icon: FolderKanban, title: 'Add a project', description: 'Group related tasks into projects for better tracking' },
+  { icon: BarChart3, title: 'Invite your team members', description: 'Collaborate with your team on tasks and projects' },
+  { icon: CheckCircle2, title: 'View analytics', description: 'Track completion rates and monitor trends' },
 ]
 
 export function WelcomeSection() {
@@ -16,44 +17,45 @@ export function WelcomeSection() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.2 }}
-      className="bg-white rounded-2xl border border-gray-200 p-8 lg:p-12 shadow-sm"
+      className="glass-card rounded-2xl overflow-hidden"
     >
-      <div className="max-w-2xl">
-        <h2 className="text-xl lg:text-2xl font-bold text-gray-900 tracking-tight">
-          Get started with your task engine
+      {/* Header */}
+      <div className="bg-gradient-to-r from-oasis-primary to-oasis-green p-6">
+        <h2 className="text-lg font-bold text-white uppercase tracking-wider">
+          Get Started
         </h2>
-        <p className="text-sm text-gray-500 mt-2">
-          Your dashboard will come alive once you start creating tasks. Here&apos;s how to begin.
-        </p>
+      </div>
 
-        <div className="mt-8 space-y-5">
-          {steps.map((step, i) => {
-            const Icon = step.icon
-            return (
-              <motion.div
-                key={step.title}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + i * 0.1, duration: 0.3 }}
-                className="flex items-start gap-4"
-              >
-                <div className="w-10 h-10 rounded-lg bg-oasis-primary/5 ring-1 ring-oasis-primary/10 flex items-center justify-center shrink-0">
-                  <Icon className="w-5 h-5 text-oasis-primary" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-gray-900">{step.title}</p>
-                  <p className="text-sm text-gray-500 mt-0.5">{step.description}</p>
-                </div>
-              </motion.div>
-            )
-          })}
-        </div>
+      {/* Steps */}
+      <div className="p-6 space-y-1">
+        {steps.map((step, i) => {
+          const Icon = step.icon
+          return (
+            <motion.div
+              key={step.title}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 + i * 0.1, duration: 0.3 }}
+              className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/40 transition-colors group cursor-pointer"
+            >
+              <div className="w-6 h-6 rounded-md border-2 border-gray-300 group-hover:border-oasis-accent flex items-center justify-center shrink-0 transition-colors">
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-900">{step.title}</p>
+              </div>
+              <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-oasis-accent transition-colors shrink-0" />
+            </motion.div>
+          )
+        })}
+      </div>
 
+      {/* CTA */}
+      <div className="px-6 pb-6">
         <Link
           href="/admin"
-          className="inline-flex items-center gap-2 mt-8 bg-oasis-primary text-white hover:bg-oasis-primary-light rounded-lg px-5 py-2.5 text-sm font-medium transition-colors"
+          className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-oasis-primary to-oasis-green text-white hover:opacity-90 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 shadow-lg"
         >
-          Open Admin Panel <ArrowRight className="w-4 h-4" />
+          Complete Setup <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
     </motion.div>

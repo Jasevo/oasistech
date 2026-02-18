@@ -41,11 +41,17 @@ export function Sidebar({ taskCount }: SidebarProps) {
 
   return (
     <motion.aside
-      animate={{ width: collapsed ? 72 : 256 }}
+      animate={{ width: collapsed ? 76 : 240 }}
       transition={{ duration: 0.2, ease: 'easeInOut' }}
-      className="hidden md:flex flex-col bg-oasis-primary-light border-r border-oasis-primary/20 h-full relative"
+      className="hidden md:flex flex-col h-full relative"
+      style={{
+        background: 'rgba(9, 36, 33, 0.65)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderRight: '1px solid rgba(255,255,255,0.06)',
+      }}
     >
-      <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto scrollbar-thin">
+      <nav className="flex-1 py-6 px-3 space-y-1 overflow-y-auto scrollbar-thin">
         {navItems.map((item) => {
           const Icon = item.icon
           const active = isActive(item.href)
@@ -54,13 +60,19 @@ export function Sidebar({ taskCount }: SidebarProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 group relative
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative
                 ${active
-                  ? 'bg-oasis-accent/15 text-oasis-accent'
-                  : 'text-white/70 hover:text-white hover:bg-white/5'
+                  ? 'bg-oasis-accent/20 text-oasis-accent shadow-sm'
+                  : 'text-white/60 hover:text-white hover:bg-white/8'
                 }`}
             >
-              <Icon className="w-5 h-5 shrink-0" />
+              <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-all duration-200 ${
+                active
+                  ? 'bg-oasis-accent/20'
+                  : 'bg-transparent group-hover:bg-white/5'
+              }`}>
+                <Icon className="w-[18px] h-[18px]" />
+              </div>
               <AnimatePresence>
                 {!collapsed && (
                   <motion.span
@@ -75,14 +87,14 @@ export function Sidebar({ taskCount }: SidebarProps) {
                 )}
               </AnimatePresence>
               {item.href === '/tasks' && taskCount !== undefined && taskCount > 0 && !collapsed && (
-                <span className="ml-auto text-xs bg-oasis-accent text-oasis-primary font-semibold rounded-full px-2 py-0.5">
+                <span className="ml-auto text-[11px] bg-oasis-accent text-oasis-primary font-bold rounded-full px-2 py-0.5 min-w-[22px] text-center">
                   {taskCount}
                 </span>
               )}
               {active && (
                 <motion.div
                   layoutId="sidebar-active"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-oasis-accent rounded-r-full"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-7 bg-oasis-accent rounded-r-full"
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 />
               )}
@@ -93,10 +105,10 @@ export function Sidebar({ taskCount }: SidebarProps) {
 
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="absolute -right-3 top-8 w-6 h-6 bg-oasis-primary border border-oasis-accent/30 rounded-full flex items-center justify-center text-oasis-accent hover:bg-oasis-accent hover:text-oasis-primary transition-colors z-10"
+        className="absolute -right-3 top-8 w-6 h-6 bg-oasis-primary/90 border border-oasis-accent/30 rounded-full flex items-center justify-center text-oasis-accent hover:bg-oasis-accent hover:text-oasis-primary transition-all duration-200 z-10 shadow-md"
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       >
-        {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
+        {collapsed ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
       </button>
     </motion.aside>
   )

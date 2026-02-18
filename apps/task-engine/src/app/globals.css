@@ -6,7 +6,10 @@
   :root {
     --oasis-primary: #092421;
     --oasis-accent: #e3ba54;
-    --oasis-bg: #EFF6FF;
+    --oasis-bg: #f0ebe3;
+    --oasis-sand: #d4c5a9;
+    --oasis-cream: #faf6ef;
+    --oasis-green: #1a5c47;
   }
 
   body {
@@ -29,7 +32,41 @@
     background: transparent;
   }
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: rgba(212, 197, 169, 0.5);
     border-radius: 3px;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .glass-light {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  .stat-gradient-1 {
+    background: linear-gradient(135deg, #0d3530 0%, #1a6b52 50%, #43c6a4 100%);
+  }
+  .stat-gradient-2 {
+    background: linear-gradient(135deg, #e3ba54 0%, #f0d078 50%, #fcebb8 100%);
+  }
+  .stat-gradient-3 {
+    background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #ddd6fe 100%);
+  }
+  .stat-gradient-4 {
+    background: linear-gradient(135deg, #059669 0%, #34d399 50%, #a7f3d0 100%);
   }
 }

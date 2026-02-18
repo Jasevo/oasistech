@@ -4,6 +4,7 @@ import { TaskList } from '@/components/TaskList'
 import { WelcomeSection } from '@/components/WelcomeSection'
 import { QuickActions } from '@/components/QuickActions'
 import { DashboardSummary } from '@/components/DashboardSummary'
+import { TopPriorities } from '@/components/TopPriorities'
 import { fetchTaskStats, fetchRecentTasks } from '@/lib/tasks'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
@@ -19,10 +20,16 @@ export default async function DashboardPage() {
   const userName = process.env.DASHBOARD_USER_NAME || 'Admin'
   const hasTasks = stats.total > 0
 
+  const priorityTasks = (recent.tasks as Array<{ id: string; title: string; status: string }>)
+    .filter((t) => t.status !== 'completed')
+    .slice(0, 3)
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 lg:space-y-8">
+      {/* Greeting bar */}
       <Greeting name={userName} />
 
+      {/* Stats cards row */}
       <StatsCards
         total={stats.total}
         todo={stats.todo}
@@ -32,30 +39,106 @@ export default async function DashboardPage() {
 
       {hasTasks ? (
         <>
-          <section>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Recent Tasks</h2>
-              <Link
-                href="/tasks"
-                className="flex items-center gap-1 text-sm font-medium text-oasis-primary hover:text-oasis-accent transition-colors"
-              >
-                View all <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-            <TaskList tasks={recent.tasks as never[]} emptyMessage="No tasks yet. Create your first task in the admin panel." />
-          </section>
+          {/* Middle section: Recent Tasks + Progress Overview side by side */}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            {/* Recent Tasks - takes 3 columns */}
+            <section className="lg:col-span-3 glass-card rounded-2xl p-6">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="text-base font-bold text-gray-900">Recent Tasks</h2>
+                <Link
+                  href="/tasks"
+                  className="flex items-center gap-1 text-xs font-semibold text-oasis-primary hover:text-oasis-accent transition-colors"
+                >
+                  View All <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+              <TaskList tasks={recent.tasks as never[]} layout="list" emptyMessage="No tasks yet. Create your first task in the admin panel." />
+            </section>
 
-          <DashboardSummary
-            total={stats.total}
-            completed={stats.completed}
-            inProgress={stats.inProgress}
-          />
+            {/* Progress Overview - takes 2 columns */}
+            <div className="lg:col-span-2">
+              <DashboardSummary
+                total={stats.total}
+                completed={stats.completed}
+                inProgress={stats.inProgress}
+              />
+            </div>
+          </div>
+
+          {/* Bottom section: Quick Actions + Top Priorities + Team Activity */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <QuickActions />
+            <TopPriorities tasks={priorityTasks} />
+            <TeamActivity />
+          </div>
         </>
       ) : (
-        <WelcomeSection />
+        <>
+          <WelcomeSection />
+          <QuickActions />
+        </>
       )}
+    </div>
+  )
+}
 
-      <QuickActions />
+function TeamActivity() {
+  return (
+    <div className="glass-card rounded-2xl overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-red-800 to-rose-600 p-6">
+        <h2 className="text-lg font-bold text-white uppercase tracking-wider">
+          Team Activity
+        </h2>
+      </div>
+
+      {/* Activity items */}
+      <div className="p-6 space-y-4">
+        <div className="flex items-start gap-3">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shrink-0 shadow-sm">
+            <span className="text-white text-xs font-bold">M</span>
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm text-gray-900">
+              <span className="font-semibold">Michael</span> updated a task
+            </p>
+            <p className="text-[11px] text-gray-400 mt-0.5">Just Now</p>
+          </div>
+        </div>
+
+        <div className="flex items-start gap-3">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shrink-0 shadow-sm">
+            <span className="text-white text-xs font-bold">S</span>
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm text-gray-900">
+              <span className="font-semibold">Sarah</span> completed a task
+            </p>
+            <p className="text-[11px] text-gray-400 mt-0.5">1 hour ago</p>
+          </div>
+        </div>
+
+        <div className="flex items-start gap-3">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-oasis-accent to-amber-600 flex items-center justify-center shrink-0 shadow-sm">
+            <span className="text-white text-xs font-bold">A</span>
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm text-gray-900">
+              <span className="font-semibold">Admin</span> created a new project
+            </p>
+            <p className="text-[11px] text-gray-400 mt-0.5">2 hours ago</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="px-6 pb-6">
+        <Link
+          href="/activity"
+          className="flex items-center justify-center gap-1 text-xs font-semibold text-gray-500 hover:text-oasis-primary transition-colors py-2 rounded-lg hover:bg-white/40"
+        >
+          View More <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
     </div>
   )
 }

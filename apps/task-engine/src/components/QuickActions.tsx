@@ -2,57 +2,75 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Plus, FolderKanban, BarChart3 } from 'lucide-react'
+import { Plus, FolderKanban, BarChart3, Users, ChevronRight } from 'lucide-react'
 
 const actions = [
   {
     icon: Plus,
     title: 'Create Task',
-    description: 'Add a new task via the admin panel',
     href: '/admin/collections/tasks/create',
+    iconBg: 'bg-oasis-primary/10',
+    iconColor: 'text-oasis-primary',
   },
   {
     icon: FolderKanban,
-    title: 'View Projects',
-    description: 'Browse and manage your projects',
+    title: 'New Project',
     href: '/projects',
+    iconBg: 'bg-purple-50',
+    iconColor: 'text-purple-600',
+  },
+  {
+    icon: Users,
+    title: 'Invite User',
+    href: '/users',
+    iconBg: 'bg-blue-50',
+    iconColor: 'text-blue-600',
   },
   {
     icon: BarChart3,
-    title: 'Analytics',
-    description: 'View charts and completion trends',
+    title: 'View Reports',
     href: '/analytics',
+    iconBg: 'bg-emerald-50',
+    iconColor: 'text-emerald-600',
   },
 ]
 
 export function QuickActions() {
   return (
-    <section>
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {actions.map((action, i) => {
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.3 }}
+      className="glass-card rounded-2xl overflow-hidden"
+    >
+      {/* Header */}
+      <div className="bg-gradient-to-r from-oasis-accent to-amber-400 p-6">
+        <h2 className="text-lg font-bold text-oasis-primary uppercase tracking-wider">
+          Quick Actions
+        </h2>
+      </div>
+
+      {/* Actions */}
+      <div className="p-6 space-y-1">
+        {actions.map((action) => {
           const Icon = action.icon
           return (
-            <motion.div
+            <Link
               key={action.title}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 + i * 0.08, duration: 0.3 }}
+              href={action.href}
+              className="flex items-center gap-3.5 p-3 rounded-xl hover:bg-white/60 transition-all duration-200 group"
             >
-              <Link
-                href={action.href}
-                className="block bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md hover:border-oasis-accent/30 transition-all duration-200 group"
-              >
-                <div className="w-10 h-10 rounded-lg bg-oasis-primary/5 flex items-center justify-center mb-3 group-hover:bg-oasis-accent/10 transition-colors">
-                  <Icon className="w-5 h-5 text-oasis-primary group-hover:text-oasis-accent transition-colors" />
-                </div>
+              <div className={`w-10 h-10 rounded-xl ${action.iconBg} flex items-center justify-center shrink-0`}>
+                <Icon className={`w-5 h-5 ${action.iconColor}`} />
+              </div>
+              <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-900">{action.title}</p>
-                <p className="text-xs text-gray-500 mt-1">{action.description}</p>
-              </Link>
-            </motion.div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors shrink-0" />
+            </Link>
           )
         })}
       </div>
-    </section>
+    </motion.section>
   )
 }

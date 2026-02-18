@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, X } from 'lucide-react'
+import { Search, X, ChevronDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface TopBarProps {
@@ -15,38 +15,38 @@ export function TopBar({ userName = 'Admin' }: TopBarProps) {
   const [searchQuery, setSearchQuery] = useState('')
 
   return (
-    <header className="sticky top-0 z-40 bg-oasis-primary border-b border-oasis-primary/30">
-      <div className="flex items-center justify-between h-14 px-4 lg:px-6">
+    <header className="sticky top-0 z-40 glass" style={{ background: 'rgba(9, 36, 33, 0.85)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+      <div className="flex items-center justify-between h-16 px-4 lg:px-6">
         {/* Brand */}
-        <Link href="/" className="flex items-center shrink-0">
+        <Link href="/" className="flex items-center gap-3 shrink-0">
           <Image
             src="/logo.png"
             alt="Doha Oasis"
             width={160}
             height={32}
-            className="h-7 w-auto"
+            className="h-8 w-auto"
             priority
           />
         </Link>
 
         {/* Search + User */}
-        <div className="flex items-center gap-3">
-          {/* Search toggle */}
+        <div className="flex items-center gap-2">
+          {/* Search */}
           <AnimatePresence>
             {searchOpen && (
               <motion.div
                 initial={{ width: 0, opacity: 0 }}
-                animate={{ width: 240, opacity: 1 }}
+                animate={{ width: 280, opacity: 1 }}
                 exit={{ width: 0, opacity: 0 }}
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
                 <input
                   type="text"
-                  placeholder="Search tasks... (Ctrl+K)"
+                  placeholder="Search tasks..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-white/10 text-white placeholder-white/40 text-sm px-3 py-1.5 rounded-lg border border-white/10 focus:border-oasis-accent/50 focus:outline-none"
+                  className="w-full bg-white/10 text-white placeholder-white/40 text-sm px-4 py-2 rounded-xl border border-white/10 focus:border-oasis-accent/50 focus:outline-none focus:ring-1 focus:ring-oasis-accent/20"
                   autoFocus
                 />
               </motion.div>
@@ -55,21 +55,25 @@ export function TopBar({ userName = 'Admin' }: TopBarProps) {
 
           <button
             onClick={() => setSearchOpen(!searchOpen)}
-            className="p-2 text-white/70 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+            className="p-2.5 text-white/60 hover:text-white rounded-xl hover:bg-white/10 transition-all duration-200"
             aria-label="Toggle search"
           >
-            {searchOpen ? <X className="w-4.5 h-4.5" /> : <Search className="w-4.5 h-4.5" />}
+            {searchOpen ? <X className="w-[18px] h-[18px]" /> : <Search className="w-[18px] h-[18px]" />}
           </button>
 
+          {/* Divider */}
+          <div className="w-px h-8 bg-white/10 mx-1" />
+
           {/* User badge */}
-          <div className="flex items-center gap-2 pl-3 border-l border-white/10">
-            <div className="w-7 h-7 rounded-full bg-oasis-accent/20 border border-oasis-accent/40 flex items-center justify-center">
-              <span className="text-oasis-accent text-xs font-semibold">
+          <button className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl hover:bg-white/10 transition-all duration-200 group">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-oasis-accent to-oasis-accent-light flex items-center justify-center shadow-lg shadow-oasis-accent/20">
+              <span className="text-oasis-primary text-sm font-bold">
                 {userName.charAt(0).toUpperCase()}
               </span>
             </div>
-            <span className="text-white/80 text-sm font-medium hidden lg:block">{userName}</span>
-          </div>
+            <span className="text-white/90 text-sm font-medium hidden lg:block">{userName}</span>
+            <ChevronDown className="w-3.5 h-3.5 text-white/40 hidden lg:block group-hover:text-white/60 transition-colors" />
+          </button>
         </div>
       </div>
     </header>

@@ -27,8 +27,16 @@ export function BottomNav() {
   }
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 pb-[env(safe-area-inset-bottom)]">
-      <div className="flex items-center justify-around h-14">
+    <nav
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 pb-[env(safe-area-inset-bottom)]"
+      style={{
+        background: 'rgba(9, 36, 33, 0.9)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderTop: '1px solid rgba(255,255,255,0.08)',
+      }}
+    >
+      <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {
           const Icon = item.icon
           const active = isActive(item.href)
@@ -37,13 +45,15 @@ export function BottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] rounded-lg transition-colors
-                ${active ? 'text-oasis-primary' : 'text-gray-400'}`}
+              className={`relative flex flex-col items-center justify-center gap-1 min-w-[48px] min-h-[48px] rounded-xl transition-all duration-200
+                ${active ? 'text-oasis-accent' : 'text-white/50 hover:text-white/80'}`}
             >
-              <Icon className="w-5 h-5" />
+              <div className={`p-1.5 rounded-xl transition-all duration-200 ${active ? 'bg-oasis-accent/15' : ''}`}>
+                <Icon className="w-5 h-5" />
+              </div>
               <span className="text-[10px] font-medium">{item.label}</span>
               {active && (
-                <div className="absolute bottom-1 w-1 h-1 rounded-full bg-oasis-accent" />
+                <div className="absolute -top-0 w-8 h-0.5 rounded-full bg-oasis-accent" />
               )}
             </Link>
           )

@@ -14,7 +14,12 @@ const config: Config = {
           'primary-light': '#0d3530',
           accent: '#e3ba54',
           'accent-light': '#f0d078',
-          bg: '#EFF6FF',
+          bg: '#f0ebe3',
+          sand: '#d4c5a9',
+          'sand-light': '#e8dcc8',
+          cream: '#faf6ef',
+          green: '#1a5c47',
+          'green-light': '#2d7a5e',
         },
       },
       fontFamily: {
@@ -24,6 +29,7 @@ const config: Config = {
         'fade-in': 'fadeIn 0.5s ease-out',
         'slide-up': 'slideUp 0.3s ease-out',
         'slide-in-left': 'slideInLeft 0.3s ease-out',
+        'shimmer': 'shimmer 2s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -37,6 +43,10 @@ const config: Config = {
         slideInLeft: {
           '0%': { opacity: '0', transform: 'translateX(-10px)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
         },
       },
     },
