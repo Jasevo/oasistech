@@ -8,55 +8,65 @@ interface CompletionRingProps {
   label?: string
 }
 
-export function CompletionRing({ percentage, size = 160, label = 'Tasks Completed' }: CompletionRingProps) {
+export function CompletionRing({
+  percentage,
+  size = 160,
+  label = 'Completed',
+}: CompletionRingProps) {
   const radius = 54
   const circumference = 2 * Math.PI * radius
   const offset = circumference - (percentage / 100) * circumference
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center shrink-0">
       <div className="relative" style={{ width: size, height: size }}>
         <svg className="w-full h-full -rotate-90" viewBox="0 0 140 140">
-          {/* Background circle */}
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stopColor="#6366F1" />
+              <stop offset="50%"  stopColor="#8B5CF6" />
+              <stop offset="100%" stopColor="#06B6D4" />
+            </linearGradient>
+            <filter id="ringGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          {/* Track */}
           <circle
-            cx="70"
-            cy="70"
-            r={radius}
+            cx="70" cy="70" r={radius}
             fill="none"
-            stroke="rgba(212, 197, 169, 0.3)"
-            strokeWidth="14"
+            stroke="#F3F4F6"
+            strokeWidth="13"
           />
-          {/* Progress circle */}
+          {/* Progress arc */}
           <motion.circle
-            cx="70"
-            cy="70"
-            r={radius}
+            cx="70" cy="70" r={radius}
             fill="none"
-            stroke="url(#goldGradient)"
-            strokeWidth="14"
+            stroke="url(#ringGrad)"
+            strokeWidth="13"
             strokeLinecap="round"
             strokeDasharray={circumference}
             initial={{ strokeDashoffset: circumference }}
             animate={{ strokeDashoffset: offset }}
-            transition={{ duration: 1.2, ease: 'easeOut' }}
+            transition={{ duration: 1.3, ease: 'easeOut' }}
+            filter="url(#ringGlow)"
           />
-          <defs>
-            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#e3ba54" />
-              <stop offset="100%" stopColor="#d4a030" />
-            </linearGradient>
-          </defs>
         </svg>
+        {/* Centre text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <motion.span
-            className="text-3xl font-bold text-oasis-primary"
+            className="text-3xl font-black text-gray-900 tabular-nums"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5, duration: 0.5, type: 'spring' }}
+            transition={{ delay: 0.6, duration: 0.45, type: 'spring' }}
           >
             {percentage}%
           </motion.span>
-          <span className="text-[11px] text-gray-500 mt-0.5 font-medium">{label}</span>
+          <span className="text-[11px] text-gray-400 font-medium mt-0.5">{label}</span>
         </div>
       </div>
     </div>
