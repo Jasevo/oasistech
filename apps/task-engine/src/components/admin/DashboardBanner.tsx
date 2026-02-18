@@ -9,7 +9,7 @@ const DashboardBanner = () => {
         borderRadius: '14px',
         overflow: 'hidden',
         position: 'relative',
-        marginBottom: '12px',
+        marginBottom: '28px',
         border: '1px solid rgba(227, 186, 84, 0.15)',
         boxShadow: '0 2px 12px rgba(9, 36, 33, 0.08)',
       }}

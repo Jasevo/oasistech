@@ -7,8 +7,8 @@ const NavLogo = () => {
   return (
     <div
       style={{
-        padding: '0 16px 14px',
-        marginBottom: '4px',
+        padding: '4px 16px 16px',
+        marginBottom: '10px',
         borderBottom: '1px solid rgba(227, 186, 84, 0.1)',
       }}
     >

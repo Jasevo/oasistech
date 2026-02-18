@@ -172,6 +172,7 @@ html[data-theme=light] .nav {
 .nav__header {
   background: #092421 !important;
   border-bottom: 1px solid rgba(227, 186, 84, 0.1) !important;
+  padding-bottom: 8px !important;
 }
 
 /* Nav scrollbar */
