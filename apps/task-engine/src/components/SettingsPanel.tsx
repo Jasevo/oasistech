@@ -1,37 +1,58 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Info, Key, Palette, LayoutGrid, Cpu, ExternalLink } from 'lucide-react'
+import {
+  Info, Key, Palette, LayoutGrid, Cpu, ExternalLink,
+  Database, Globe, Tag, Layers,
+} from 'lucide-react'
 import { CopyBlock } from './ui/CopyBlock'
 import { ToggleSwitch } from './ui/ToggleSwitch'
 import { useState, useEffect } from 'react'
 
-function SettingsCard({ title, icon: Icon, children, index }: {
+interface SettingsCardProps {
   title: string
   icon: typeof Info
+  headerGradient: string
   children: React.ReactNode
   index: number
-}) {
+}
+
+function SettingsCard({ title, icon: Icon, headerGradient, children, index }: SettingsCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.08, duration: 0.3 }}
-      className="bg-white rounded-xl border border-gray-200 p-6"
+      transition={{ delay: index * 0.07, duration: 0.35 }}
+      className="glass-card rounded-2xl overflow-hidden hover:shadow-md transition-shadow"
     >
-      <div className="flex items-center gap-2.5 mb-4">
-        <div className="w-8 h-8 rounded-lg bg-oasis-primary/5 flex items-center justify-center">
-          <Icon className="w-4 h-4 text-oasis-primary" />
-        </div>
-        <h3 className="font-semibold text-gray-900">{title}</h3>
+      <div className={`bg-gradient-to-r ${headerGradient} px-5 py-4 flex items-center gap-2`}>
+        <Icon className="w-4 h-4 text-white/80" />
+        <h3 className="text-xs font-bold text-white/80 uppercase tracking-widest">{title}</h3>
       </div>
-      {children}
+      <div className="p-5">{children}</div>
     </motion.div>
   )
 }
 
+function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between py-2.5 border-b border-gray-100 last:border-0">
+      <span className="text-sm text-gray-500">{label}</span>
+      <div className="text-right">{children}</div>
+    </div>
+  )
+}
+
+const techStack = [
+  { name: 'Next.js 15',      color: 'bg-black text-white' },
+  { name: 'PayloadCMS 3',    color: 'bg-indigo-600 text-white' },
+  { name: 'PostgreSQL',      color: 'bg-sky-700 text-white' },
+  { name: 'Tailwind CSS',    color: 'bg-cyan-500 text-white' },
+  { name: 'Framer Motion',   color: 'bg-violet-600 text-white' },
+]
+
 export function SettingsPanel({ appUrl }: { appUrl: string }) {
-  const [darkMode, setDarkMode] = useState(false)
+  const [darkMode, setDarkMode]       = useState(false)
   const [compactView, setCompactView] = useState(false)
 
   useEffect(() => {
@@ -49,78 +70,113 @@ export function SettingsPanel({ appUrl }: { appUrl: string }) {
   }
 
   return (
-    <div className="space-y-4 max-w-2xl">
-      <SettingsCard title="Application Information" icon={Info} index={0}>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-500">Version</span>
-            <span className="text-sm font-medium text-gray-900">1.0.0</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-500">Environment</span>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-green-100 text-green-700 font-medium">
-              {process.env.NODE_ENV || 'development'}
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-500">Database</span>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-sm font-medium text-green-700">Connected</span>
-            </div>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-500">Framework</span>
-            <span className="text-sm font-medium text-gray-900">Next.js + PayloadCMS</span>
-          </div>
-        </div>
-      </SettingsCard>
+    <div className="space-y-4">
+      {/* Top row: App Info + API Config side by side on desktop */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-      <SettingsCard title="API Configuration" icon={Key} index={1}>
-        <div className="space-y-4">
-          <CopyBlock label="REST API Endpoint" text={`${appUrl}/api`} />
-          <CopyBlock label="Tasks Endpoint" text={`${appUrl}/api/tasks`} />
-          <CopyBlock
-            label="Authorization Header Format"
-            text="Authorization: api-users API-Key <your-key>"
+        {/* App Information */}
+        <SettingsCard
+          title="Application Information"
+          icon={Info}
+          headerGradient="from-slate-700 to-slate-500"
+          index={0}
+        >
+          <div>
+            <InfoRow label="Version">
+              <span className="text-sm font-semibold text-gray-900">1.0.0</span>
+            </InfoRow>
+            <InfoRow label="Environment">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold">
+                {process.env.NODE_ENV || 'development'}
+              </span>
+            </InfoRow>
+            <InfoRow label="Database">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-sm font-semibold text-emerald-700">Connected</span>
+              </div>
+            </InfoRow>
+            <InfoRow label="Framework">
+              <span className="text-sm font-semibold text-gray-900">Next.js + PayloadCMS</span>
+            </InfoRow>
+          </div>
+        </SettingsCard>
+
+        {/* API Configuration */}
+        <SettingsCard
+          title="API Configuration"
+          icon={Key}
+          headerGradient="from-oasis-primary to-oasis-primary-light"
+          index={1}
+        >
+          <div className="space-y-4">
+            <CopyBlock label="REST API Endpoint"          text={`${appUrl}/api`} />
+            <CopyBlock label="Tasks Endpoint"             text={`${appUrl}/api/tasks`} />
+            <CopyBlock label="Authorization Header"       text="Authorization: api-users API-Key <your-key>" />
+            <a
+              href="/admin/collections/api-users"
+              className="flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-semibold text-oasis-primary bg-oasis-accent rounded-xl hover:bg-oasis-accent-light shadow-sm hover:shadow-md transition-all"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Manage API Keys in Admin Panel
+            </a>
+          </div>
+        </SettingsCard>
+      </div>
+
+      {/* Middle row: Theme + Display Preferences side by side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+        {/* Theme */}
+        <SettingsCard
+          title="Theme"
+          icon={Palette}
+          headerGradient="from-violet-700 to-purple-500"
+          index={2}
+        >
+          <ToggleSwitch
+            checked={darkMode}
+            onChange={toggleDarkMode}
+            label="Dark Mode"
+            description="Switch to dark theme for reduced eye strain."
           />
-          <a
-            href="/admin/collections/api-users"
-            className="inline-flex items-center gap-1.5 text-sm text-oasis-primary hover:text-oasis-accent transition-colors font-medium"
-          >
-            <ExternalLink className="w-3.5 h-3.5" />
-            Manage API Keys in Admin Panel
-          </a>
-        </div>
-      </SettingsCard>
+        </SettingsCard>
 
-      <SettingsCard title="Theme" icon={Palette} index={2}>
-        <ToggleSwitch
-          checked={darkMode}
-          onChange={toggleDarkMode}
-          label="Dark Mode"
-          description="Switch to dark theme for reduced eye strain."
-        />
-      </SettingsCard>
+        {/* Display Preferences */}
+        <SettingsCard
+          title="Display Preferences"
+          icon={LayoutGrid}
+          headerGradient="from-sky-700 to-cyan-500"
+          index={3}
+        >
+          <ToggleSwitch
+            checked={compactView}
+            onChange={setCompactView}
+            label="Compact View"
+            description="Reduce spacing for denser task lists."
+          />
+        </SettingsCard>
+      </div>
 
-      <SettingsCard title="Display Preferences" icon={LayoutGrid} index={3}>
-        <ToggleSwitch
-          checked={compactView}
-          onChange={setCompactView}
-          label="Compact View"
-          description="Reduce spacing for denser task lists."
-        />
-      </SettingsCard>
-
-      <SettingsCard title="About" icon={Cpu} index={4}>
-        <div className="space-y-3">
-          <p className="text-sm text-gray-600">
-            OasisTech Secure Task Engine — Enterprise task management with API key authentication, server-side rendering, and modern UI.
+      {/* About — full width */}
+      <SettingsCard
+        title="About OasisTech"
+        icon={Cpu}
+        headerGradient="from-oasis-green to-oasis-primary-light"
+        index={4}
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-gray-600 leading-relaxed">
+            OasisTech Secure Task Engine — Enterprise task management with API key authentication,
+            server-side rendering, and modern UI built for high performance and reliability.
           </p>
           <div className="flex flex-wrap gap-2">
-            {['Next.js 15', 'PayloadCMS 3', 'PostgreSQL', 'Tailwind CSS', 'Framer Motion'].map((tech) => (
-              <span key={tech} className="text-xs px-2.5 py-1 rounded-full bg-oasis-primary/5 text-oasis-primary font-medium">
-                {tech}
+            {techStack.map((tech) => (
+              <span
+                key={tech.name}
+                className={`text-xs px-3 py-1 rounded-full font-semibold ${tech.color}`}
+              >
+                {tech.name}
               </span>
             ))}
           </div>

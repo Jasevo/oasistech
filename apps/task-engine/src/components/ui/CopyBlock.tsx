@@ -16,15 +16,25 @@ export function CopyBlock({ text, label }: { text: string; label?: string }) {
 
   return (
     <div>
-      {label && <p className="text-xs font-medium text-gray-500 mb-1.5">{label}</p>}
-      <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-        <code className="text-sm text-gray-800 flex-1 overflow-x-auto scrollbar-thin">{text}</code>
+      {label && (
+        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
+          {label}
+        </p>
+      )}
+      <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 group hover:border-oasis-accent/40 transition-colors">
+        <code className="text-xs font-mono text-gray-700 flex-1 overflow-x-auto scrollbar-thin leading-relaxed">
+          {text}
+        </code>
         <button
           onClick={handleCopy}
-          className="shrink-0 p-1.5 rounded-md hover:bg-gray-200 transition-colors text-gray-500 hover:text-gray-700"
-          aria-label="Copy"
+          className={`shrink-0 p-1.5 rounded-lg transition-all ${
+            copied
+              ? 'bg-emerald-50 text-emerald-600'
+              : 'text-gray-400 hover:bg-gray-200 hover:text-gray-700'
+          }`}
+          aria-label="Copy to clipboard"
         >
-          {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+          {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
         </button>
       </div>
     </div>
