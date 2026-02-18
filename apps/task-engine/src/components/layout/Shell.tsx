@@ -20,11 +20,11 @@ export function Shell({ children, userName, openTaskCount }: ShellProps) {
           className="absolute inset-[-20px] bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: 'url(/dohaoasis.jpg)',
-            filter: 'blur(6px)',
+            filter: 'blur(2px)',
           }}
         />
         {/* Light blue overlay — lets image show through subtly */}
-        <div className="absolute inset-0 bg-oasis-bg/[0.78]" />
+        <div className="absolute inset-0 bg-oasis-bg/[0.65]" />
         {/* Vignette — fades edges to solid light blue for smooth blending */}
         <div
           className="absolute inset-0"
