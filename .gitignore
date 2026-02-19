@@ -34,9 +34,6 @@ Desktop.ini
 .idea/
 *.swp
 *.swo
-.claude/
-CLAUDE.md
-
 # Logs
 *.log
 npm-debug.log*
