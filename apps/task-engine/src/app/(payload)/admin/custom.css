@@ -543,8 +543,8 @@ html[data-theme=dark] .pill--style-light {
   position: fixed !important;
   inset: 0 !important;
   background:
-    radial-gradient(ellipse at center, rgba(9, 36, 33, 0.35) 0%, rgba(6, 27, 25, 0.65) 80%),
-    linear-gradient(to bottom, rgba(6, 27, 25, 0.15) 0%, rgba(6, 27, 25, 0.4) 100%) !important;
+    radial-gradient(ellipse at center, rgba(9, 36, 33, 0.15) 0%, rgba(6, 27, 25, 0.4) 80%),
+    linear-gradient(to bottom, rgba(6, 27, 25, 0.05) 0%, rgba(6, 27, 25, 0.25) 100%) !important;
   z-index: 0 !important;
   pointer-events: none !important;
 }
