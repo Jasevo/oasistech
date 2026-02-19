@@ -342,10 +342,10 @@ html[data-theme=dark] .table tbody tr:hover {
 /* Table header */
 .table thead th {
   font-weight: 600 !important;
-  font-size: 11px !important;
+  font-size: 12px !important;
   letter-spacing: 0.04em !important;
   text-transform: uppercase !important;
-  color: var(--theme-elevation-450) !important;
+  color: var(--theme-elevation-500) !important;
 }
 
 
@@ -359,12 +359,18 @@ html[data-theme=dark] .table tbody tr:hover {
 }
 
 .dashboard__card-list .card {
-  border: 1px solid var(--theme-elevation-100) !important;
+  border: 1px solid rgba(9, 36, 33, 0.12) !important;
   border-radius: 14px !important;
   transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s !important;
   background: var(--theme-elevation-0) !important;
   overflow: hidden !important;
   position: relative !important;
+  box-shadow: 0 1px 4px rgba(9, 36, 33, 0.06) !important;
+}
+
+html[data-theme=dark] .dashboard__card-list .card {
+  border-color: rgba(227, 186, 84, 0.1) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
 /* Gold top accent line on cards */
@@ -430,10 +436,10 @@ html[data-theme=dark] .dashboard__card-list .card:hover {
 
 /* "Collections" label — subtle gold uppercase */
 .dashboard__card-list-header h2 {
-  font-size: 11px !important;
+  font-size: 12px !important;
   text-transform: uppercase !important;
   letter-spacing: 0.06em !important;
-  color: var(--theme-elevation-400) !important;
+  color: var(--theme-elevation-500) !important;
 }
 
 
@@ -454,7 +460,7 @@ html[data-theme=dark] .dashboard__card-list .card:hover {
 /* Collection description under title */
 .collection-list__sub-header,
 .list-header__after-header-content {
-  color: var(--theme-elevation-400) !important;
+  color: var(--theme-elevation-500) !important;
   font-size: 14px !important;
   margin-bottom: 20px !important;
 }
@@ -565,13 +571,14 @@ html[data-theme=dark] .pill--style-light {
 /* ── Login card — scoped precisely ── */
 /* The form itself (login form container) */
 .login {
-  background: rgba(255, 255, 255, 0.97) !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.97) 0%, rgba(250, 247, 240, 0.97) 100%) !important;
   border-radius: 18px !important;
   box-shadow:
-    0 0 0 1px rgba(227, 186, 84, 0.18),
-    0 20px 60px rgba(0, 0, 0, 0.45),
-    0 4px 16px rgba(0, 0, 0, 0.25) !important;
+    0 0 0 1px rgba(227, 186, 84, 0.22),
+    0 16px 48px rgba(0, 0, 0, 0.28),
+    0 4px 12px rgba(0, 0, 0, 0.15) !important;
   overflow: hidden !important;
+  backdrop-filter: blur(8px) !important;
 }
 
 html[data-theme=dark] .login {
@@ -621,7 +628,7 @@ html[data-theme=dark] .login h2 {
 }
 
 .login p {
-  color: rgba(9, 36, 33, 0.5) !important;
+  color: rgba(9, 36, 33, 0.65) !important;
   font-size: 13px !important;
 }
 
@@ -633,8 +640,8 @@ html[data-theme=dark] .login p {
 .login input[type=email],
 .login input[type=password],
 .login input[type=text] {
-  background: rgba(9, 36, 33, 0.04) !important;
-  border: 1.5px solid rgba(9, 36, 33, 0.12) !important;
+  background: rgba(9, 36, 33, 0.035) !important;
+  border: 1.5px solid rgba(9, 36, 33, 0.16) !important;
   border-radius: 10px !important;
   padding: 12px 14px !important;
   font-size: 15px !important;
@@ -654,7 +661,7 @@ html[data-theme=dark] .login p {
 .login input[type=email]::placeholder,
 .login input[type=password]::placeholder,
 .login input[type=text]::placeholder {
-  color: rgba(9, 36, 33, 0.35) !important;
+  color: rgba(9, 36, 33, 0.45) !important;
 }
 
 html[data-theme=dark] .login input[type=email],
@@ -715,14 +722,15 @@ html[data-theme=dark] .login a:hover {
 /* Logout / Create-first-user — same card treatment */
 .logout,
 .create-first-user {
-  background: rgba(255, 255, 255, 0.97) !important;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.97) 0%, rgba(250, 247, 240, 0.97) 100%) !important;
   border-radius: 18px !important;
   box-shadow:
-    0 0 0 1px rgba(227, 186, 84, 0.18),
-    0 20px 60px rgba(0, 0, 0, 0.45),
-    0 4px 16px rgba(0, 0, 0, 0.25) !important;
+    0 0 0 1px rgba(227, 186, 84, 0.22),
+    0 16px 48px rgba(0, 0, 0, 0.28),
+    0 4px 12px rgba(0, 0, 0, 0.15) !important;
   overflow: hidden !important;
   padding: 36px !important;
+  backdrop-filter: blur(8px) !important;
 }
 
 html[data-theme=dark] .logout,
@@ -750,7 +758,7 @@ html[data-theme=dark] .create-first-user {
 /* ── Search & filter bar ── */
 .list-controls {
   border-radius: 14px !important;
-  border: 1px solid var(--theme-elevation-100) !important;
+  border: 1px solid var(--theme-elevation-200) !important;
   background: var(--theme-elevation-0) !important;
   padding: 14px 18px !important;
   margin-bottom: 20px !important;
@@ -767,7 +775,7 @@ html[data-theme=dark] .list-controls {
 .search-bar input,
 .list-controls input[type=text],
 .list-controls input {
-  border: 1.5px solid var(--theme-elevation-150) !important;
+  border: 1.5px solid var(--theme-elevation-200) !important;
   border-radius: 10px !important;
   padding: 10px 14px 10px 36px !important;
   font-size: 14px !important;
@@ -821,7 +829,7 @@ html[data-theme=dark] .list-controls input:focus {
 .list-controls__toggle-sort,
 .list-controls__toggle-group-by,
 .search-bar__actions .pill {
-  border: 1.5px solid var(--theme-elevation-150) !important;
+  border: 1.5px solid var(--theme-elevation-200) !important;
   border-radius: 8px !important;
   padding: 6px 14px !important;
   font-size: 12px !important;
@@ -898,7 +906,7 @@ html[data-theme=dark] .search-bar__actions .pill {
 .table {
   border-radius: 12px !important;
   overflow: hidden !important;
-  border: 1px solid var(--theme-elevation-100) !important;
+  border: 1px solid var(--theme-elevation-200) !important;
 }
 
 html[data-theme=dark] .table {
@@ -1152,7 +1160,7 @@ html[data-theme=dark] .doc-controls__url .doc-controls__url-path {
   font-weight: 600 !important;
   letter-spacing: 0.04em !important;
   text-transform: uppercase !important;
-  color: var(--theme-elevation-400) !important;
+  color: var(--theme-elevation-500) !important;
   margin-bottom: 8px !important;
 }
 
@@ -1484,6 +1492,137 @@ html[data-theme=dark] .tabs-field__tab-button:hover {
 
 .toast--error {
   border-left: 3px solid #e05252 !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   TEST CREDENTIALS (login page afterLogin component)
+   ═══════════════════════════════════════════════════════════════ */
+.test-credentials-wrapper {
+  width: 100%;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.test-credentials-card {
+  padding: 18px 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(227, 186, 84, 0.3);
+  background: linear-gradient(135deg, rgba(9,36,33,0.06) 0%, rgba(227,186,84,0.06) 100%);
+  width: 100%;
+}
+
+html[data-theme=dark] .test-credentials-card {
+  background: linear-gradient(135deg, rgba(227,186,84,0.06) 0%, rgba(9,36,33,0.15) 100%);
+  border-color: rgba(227, 186, 84, 0.2);
+}
+
+.test-credentials-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.test-credentials-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #092421, #1a5c47);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.test-credentials-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #092421;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+html[data-theme=dark] .test-credentials-title {
+  color: #e4eded;
+}
+
+.test-credentials-values {
+  background: rgba(255,255,255,0.7);
+  border-radius: 8px;
+  border: 1px solid rgba(9,36,33,0.12);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+html[data-theme=dark] .test-credentials-values {
+  background: rgba(0,0,0,0.2);
+  border-color: rgba(227,186,84,0.1);
+}
+
+.test-credentials-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.test-credentials-label {
+  font-size: 11px;
+  color: #556462;
+  font-weight: 500;
+}
+
+html[data-theme=dark] .test-credentials-label {
+  color: #84a9a5;
+}
+
+.test-credentials-value {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #092421;
+  background: rgba(9,36,33,0.07);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+html[data-theme=dark] .test-credentials-value {
+  color: #e3ba54;
+  background: rgba(227,186,84,0.1);
+}
+
+.test-credentials-footer {
+  margin-top: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(227, 186, 84, 0.25);
+  box-shadow: 0 4px 20px rgba(9, 36, 33, 0.15);
+  position: relative;
+}
+
+html[data-theme=dark] .test-credentials-footer {
+  border-color: rgba(227, 186, 84, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.test-credentials-footer-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 80px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.test-credentials-footer-vignette {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(9,36,33,0.15) 0%, transparent 30%, transparent 70%, rgba(9,36,33,0.15) 100%);
+  pointer-events: none;
 }
 
 

@@ -60,7 +60,7 @@ const DashboardBanner = () => {
           <p
             style={{
               fontSize: '13px',
-              color: 'rgba(232, 245, 243, 0.55)',
+              color: 'rgba(232, 245, 243, 0.75)',
               margin: 0,
               lineHeight: '1.5',
             }}
