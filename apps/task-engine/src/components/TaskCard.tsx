@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Calendar, AlertTriangle, Circle, Loader2, CheckCircle2, FolderKanban } from 'lucide-react'
@@ -59,8 +60,14 @@ const statusBadge = {
 } as const
 
 export function TaskCard({ task, index }: TaskCardProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const isOverdue =
-    task.dueDate && task.status !== 'completed' && new Date(task.dueDate) < new Date()
+    mounted && task.dueDate && task.status !== 'completed' && new Date(task.dueDate) < new Date()
 
   const projectName =
     task.project && typeof task.project === 'object' ? task.project.name : null
