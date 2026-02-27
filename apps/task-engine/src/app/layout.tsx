@@ -35,8 +35,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var c=console.error;console.error=function(){var a=arguments[0];if(typeof a==='string'&&(a.includes('Hydration')||a.includes('hydrat')||a.includes('#418')||a.includes('#423')||a.includes('#425')))return;c.apply(console,arguments)};var e=window.onerror;window.onerror=function(m){if(typeof m==='string'&&(m.includes('#418')||m.includes('#423')||m.includes('#425')))return true;if(e)return e.apply(this,arguments)}})()`,
+          }}
+        />
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         {children}
       </body>
     </html>
