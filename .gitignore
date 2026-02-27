@@ -38,6 +38,7 @@ Desktop.ini
 # Tool configs
 .claude/
 .jack/
+CLAUDE.md
 
 # Logs
 *.log

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Plus, ArrowRight, CheckCircle2, Activity } from 'lucide-react'
@@ -65,6 +66,12 @@ function getActionText(action: string, taskTitle: string, status: string): React
 }
 
 export function ActivityTimeline({ activities }: { activities: ActivityEntry[] }) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   if (activities.length === 0) {
     return (
       <EmptyState
@@ -75,10 +82,12 @@ export function ActivityTimeline({ activities }: { activities: ActivityEntry[] }
     )
   }
 
-  // Group by date
+  // Group by date — use static date format on server, relative on client
   const groups = new Map<string, ActivityEntry[]>()
   for (const activity of activities) {
-    const group = getDateGroup(activity.timestamp)
+    const group = mounted
+      ? getDateGroup(activity.timestamp)
+      : new Date(activity.timestamp).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
     if (!groups.has(group)) groups.set(group, [])
     groups.get(group)!.push(activity)
   }
@@ -121,7 +130,11 @@ export function ActivityTimeline({ activities }: { activities: ActivityEntry[] }
                             {entry.projectName}
                           </span>
                         )}
-                        <span className="text-xs text-gray-400">{getRelativeTime(entry.timestamp)}</span>
+                        <span className="text-xs text-gray-400">
+                          {mounted
+                            ? getRelativeTime(entry.timestamp)
+                            : new Date(entry.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        </span>
                         <Link
                           href={`/tasks/${entry.taskId}`}
                           className="text-xs text-oasis-primary hover:text-oasis-accent transition-colors ml-auto"

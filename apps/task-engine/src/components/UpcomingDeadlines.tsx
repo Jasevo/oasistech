@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Clock, AlertTriangle, CalendarDays } from 'lucide-react'
@@ -13,22 +14,28 @@ interface UpcomingDeadlinesProps {
   }>
 }
 
+function getDaysUntil(dateStr: string, now: Date) {
+  const due = new Date(dateStr)
+  const diff = Math.ceil((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+  return diff
+}
+
+function getUrgencyStyle(days: number) {
+  if (days < 0) return { bg: 'bg-red-50', text: 'text-red-600', label: 'Overdue' }
+  if (days === 0) return { bg: 'bg-amber-50', text: 'text-amber-600', label: 'Today' }
+  if (days === 1) return { bg: 'bg-amber-50', text: 'text-amber-600', label: 'Tomorrow' }
+  if (days <= 3) return { bg: 'bg-oasis-accent/10', text: 'text-oasis-accent', label: `${days}d left` }
+  return { bg: 'bg-gray-100', text: 'text-gray-500', label: `${days}d left` }
+}
+
 export function UpcomingDeadlines({ tasks }: UpcomingDeadlinesProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const now = new Date()
-
-  function getDaysUntil(dateStr: string) {
-    const due = new Date(dateStr)
-    const diff = Math.ceil((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-    return diff
-  }
-
-  function getUrgencyStyle(days: number) {
-    if (days < 0) return { bg: 'bg-red-50', text: 'text-red-600', label: 'Overdue' }
-    if (days === 0) return { bg: 'bg-amber-50', text: 'text-amber-600', label: 'Today' }
-    if (days === 1) return { bg: 'bg-amber-50', text: 'text-amber-600', label: 'Tomorrow' }
-    if (days <= 3) return { bg: 'bg-oasis-accent/10', text: 'text-oasis-accent', label: `${days}d left` }
-    return { bg: 'bg-gray-100', text: 'text-gray-500', label: `${days}d left` }
-  }
 
   return (
     <motion.div
@@ -52,8 +59,8 @@ export function UpcomingDeadlines({ tasks }: UpcomingDeadlinesProps) {
       <div className="p-6 space-y-3">
         {tasks.length > 0 ? (
           tasks.map((task) => {
-            const days = getDaysUntil(task.dueDate)
-            const urgency = getUrgencyStyle(days)
+            const days = mounted ? getDaysUntil(task.dueDate, now) : 0
+            const urgency = mounted ? getUrgencyStyle(days) : { bg: 'bg-gray-100', text: 'text-gray-500', label: '\u00A0' }
             return (
               <Link
                 key={task.id}
@@ -61,7 +68,7 @@ export function UpcomingDeadlines({ tasks }: UpcomingDeadlinesProps) {
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/40 transition-colors group"
               >
                 <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${urgency.bg}`}>
-                  {days < 0 ? (
+                  {mounted && days < 0 ? (
                     <AlertTriangle className={`w-4 h-4 ${urgency.text}`} />
                   ) : (
                     <Clock className={`w-4 h-4 ${urgency.text}`} />

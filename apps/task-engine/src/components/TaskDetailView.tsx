@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import {
@@ -111,13 +112,19 @@ function ProgressBar({ status }: { status: string }) {
 }
 
 export function TaskDetailView({ task, projectName, projectId }: TaskDetailViewProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const now = new Date()
-  const isOverdue = task.dueDate && task.status !== 'completed' && new Date(task.dueDate) < now
+  const isOverdue = mounted && task.dueDate && task.status !== 'completed' && new Date(task.dueDate) < now
 
   const status = statusConfig[task.status as keyof typeof statusConfig] ?? statusConfig.todo
   const priority = priorityConfig[task.priority as keyof typeof priorityConfig] ?? priorityConfig.medium
 
-  const daysUntilDue = task.dueDate
+  const daysUntilDue = mounted && task.dueDate
     ? Math.ceil((new Date(task.dueDate).getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
     : null
 

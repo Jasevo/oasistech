@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'OasisTech | Secure Task Engine',
   description: 'Enterprise task management powered by OasisTech',
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
-  icons: { icon: '/favicon.ico' },
+  icons: { icon: '/logo.png' },
   openGraph: {
     title: 'OasisTech | Secure Task Engine',
     description: 'Enterprise task management powered by OasisTech',
