@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url'
 import { Tasks } from './src/collections/Tasks'
 import { Projects } from './src/collections/Projects'
 import { ApiUsers } from './src/collections/ApiUsers'
+import { SiteVisits } from './src/collections/SiteVisits'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -23,7 +24,7 @@ export default buildConfig({
       beforeDashboard: ['./src/components/admin/DashboardBanner#default'],
     },
   },
-  collections: [Tasks, Projects, ApiUsers],
+  collections: [Tasks, Projects, ApiUsers, SiteVisits],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

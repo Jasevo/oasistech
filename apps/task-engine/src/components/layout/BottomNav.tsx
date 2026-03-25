@@ -7,6 +7,7 @@ import {
   CheckSquare,
   FolderKanban,
   Activity,
+  Eye,
   Settings,
 } from 'lucide-react'
 
@@ -14,7 +15,7 @@ const navItems = [
   { href: '/', label: 'Home', icon: LayoutDashboard },
   { href: '/tasks', label: 'Tasks', icon: CheckSquare },
   { href: '/projects', label: 'Projects', icon: FolderKanban },
-  { href: '/activity', label: 'Activity', icon: Activity },
+  { href: '/visitors', label: 'Visitors', icon: Eye },
   { href: '/settings', label: 'More', icon: Settings },
 ]
 
