@@ -11,6 +11,7 @@ import {
   Users,
   BarChart3,
   Activity,
+  Eye,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -24,6 +25,7 @@ const navItems = [
   { href: '/users', label: 'Users', icon: Users },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/activity', label: 'Activity', icon: Activity },
+  { href: '/visitors', label: 'Visitors', icon: Eye },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
