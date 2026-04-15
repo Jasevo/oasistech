@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import {
-  Search, X, ChevronDown, Sparkles, CheckSquare, FolderOpen,
+  Search, X, ChevronDown, CheckSquare, FolderOpen,
   Settings, LayoutDashboard, Shield, LogOut, User,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -309,7 +309,7 @@ export function TopBar({ userName = 'Admin' }: TopBarProps) {
               animate={{ backgroundPosition: ['200% 0', '-100% 0'] }}
               transition={{ duration: 2.2, repeat: Infinity, ease: 'linear' }}
             />
-            <Sparkles className="w-3.5 h-3.5 relative z-10" />
+            <Image src="/icon.png" alt="Oasis AI" width={16} height={16} className="relative z-10 w-4 h-4 object-contain" />
             <span className="relative z-10 hidden sm:inline">{t('askAI')}</span>
           </motion.button>
 
