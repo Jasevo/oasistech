@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Flame, AlertTriangle, ArrowUp, Minus } from 'lucide-react'
+import { useLanguage } from '@/context/LanguageContext'
 
 interface PriorityTask {
   id: string
@@ -26,6 +27,7 @@ const PRIORITY_CONFIG: Record<
 }
 
 export function TopPriorities({ tasks }: TopPrioritiesProps) {
+  const { t } = useLanguage()
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -35,7 +37,7 @@ export function TopPriorities({ tasks }: TopPrioritiesProps) {
     >
       {/* Header */}
       <div className="bg-gradient-to-r from-oasis-primary to-oasis-green p-5">
-        <h2 className="text-sm font-bold text-white uppercase tracking-wider">Top Priorities</h2>
+        <h2 className="text-sm font-bold text-white uppercase tracking-wider">{t('topPriorities')}</h2>
       </div>
 
       {/* Priority items */}
@@ -69,7 +71,7 @@ export function TopPriorities({ tasks }: TopPrioritiesProps) {
             )
           })
         ) : (
-          <p className="text-sm text-gray-400 text-center py-6">No open priority tasks</p>
+          <p className="text-sm text-gray-400 text-center py-6">{t('noOpenTasks')}</p>
         )}
       </div>
 
@@ -78,7 +80,7 @@ export function TopPriorities({ tasks }: TopPrioritiesProps) {
           href="/tasks?sort=-priority"
           className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-oasis-primary to-oasis-green text-white hover:opacity-90 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all duration-200 shadow-lg"
         >
-          Manage Tasks <ArrowRight className="w-4 h-4" />
+          {t('manageTasks')} <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
     </motion.div>

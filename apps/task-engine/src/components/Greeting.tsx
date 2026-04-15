@@ -4,16 +4,17 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Plus, Calendar } from 'lucide-react'
+import { useLanguage } from '@/context/LanguageContext'
 
-function getGreeting(): string {
+function getGreetingKey(): string {
   const hour = new Date().getHours()
-  if (hour < 12) return 'Good morning'
-  if (hour < 17) return 'Good afternoon'
-  return 'Good evening'
+  if (hour < 12) return 'goodMorning'
+  if (hour < 17) return 'goodAfternoon'
+  return 'goodEvening'
 }
 
-function getFormattedDate(): string {
-  return new Date().toLocaleDateString('en-US', {
+function getFormattedDate(lang: string): string {
+  return new Date().toLocaleDateString(lang === 'ar' ? 'ar-SA' : 'en-US', {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
@@ -22,21 +23,17 @@ function getFormattedDate(): string {
 
 interface GreetingProps {
   name: string
-  taskSummary?: {
-    today: number
-    overdue: number
-    inProgress: number
-  }
 }
 
-export function Greeting({ name, taskSummary }: GreetingProps) {
-  const [greeting, setGreeting] = useState('Welcome')
+export function Greeting({ name }: GreetingProps) {
+  const { t, lang } = useLanguage()
+  const [greetingKey, setGreetingKey] = useState('')
   const [date, setDate] = useState('')
 
   useEffect(() => {
-    setGreeting(getGreeting())
-    setDate(getFormattedDate())
-  }, [])
+    setGreetingKey(getGreetingKey())
+    setDate(getFormattedDate(lang))
+  }, [lang])
 
   return (
     <motion.div
@@ -47,19 +44,10 @@ export function Greeting({ name, taskSummary }: GreetingProps) {
     >
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-gray-900">
-          {greeting}, <span className="text-oasis-primary">{name}</span> <span className="inline-block animate-fade-in">&#128075;</span>
+          {greetingKey ? t(greetingKey) : '...'},{' '}
+          <span className="text-oasis-primary">{name}</span>
         </h1>
-        <div className="flex items-center gap-3 mt-1.5">
-          {taskSummary && taskSummary.today > 0 ? (
-            <p className="text-gray-500 text-sm">
-              You have <span className="font-semibold text-gray-700">{taskSummary.today} tasks today</span>
-              {taskSummary.overdue > 0 && <>, <span className="text-red-500 font-semibold">{taskSummary.overdue} overdue</span></>}
-              {taskSummary.inProgress > 0 && <>, and <span className="text-oasis-green font-semibold">{taskSummary.inProgress} in progress</span></>}.
-            </p>
-          ) : (
-            <p className="text-gray-500 text-sm">Here&apos;s an overview of your task engine.</p>
-          )}
-        </div>
+        <p className="text-gray-500 text-sm mt-1.5">{t('overview')}</p>
       </div>
 
       <div className="flex items-center gap-3 shrink-0">
@@ -74,7 +62,7 @@ export function Greeting({ name, taskSummary }: GreetingProps) {
           className="inline-flex items-center gap-2 bg-oasis-primary hover:bg-oasis-primary-light text-white rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 shadow-lg shadow-oasis-primary/20 hover:shadow-xl hover:shadow-oasis-primary/30"
         >
           <Plus className="w-4 h-4" />
-          Create Task
+          {t('createTask')}
         </Link>
       </div>
     </motion.div>

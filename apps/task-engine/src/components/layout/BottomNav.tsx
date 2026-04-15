@@ -2,25 +2,20 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import {
-  LayoutDashboard,
-  CheckSquare,
-  FolderKanban,
-  Activity,
-  Eye,
-  Settings,
-} from 'lucide-react'
-
-const navItems = [
-  { href: '/', label: 'Home', icon: LayoutDashboard },
-  { href: '/tasks', label: 'Tasks', icon: CheckSquare },
-  { href: '/projects', label: 'Projects', icon: FolderKanban },
-  { href: '/visitors', label: 'Visitors', icon: Eye },
-  { href: '/settings', label: 'More', icon: Settings },
-]
+import { LayoutDashboard, CheckSquare, FolderKanban, Eye, Settings } from 'lucide-react'
+import { useLanguage } from '@/context/LanguageContext'
 
 export function BottomNav() {
   const pathname = usePathname()
+  const { t } = useLanguage()
+
+  const navItems = [
+    { href: '/',         labelKey: 'home',      icon: LayoutDashboard },
+    { href: '/tasks',    labelKey: 'tasks',     icon: CheckSquare },
+    { href: '/projects', labelKey: 'projects',  icon: FolderKanban },
+    { href: '/visitors', labelKey: 'visitors',  icon: Eye },
+    { href: '/settings', labelKey: 'more',      icon: Settings },
+  ]
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/'
@@ -33,7 +28,6 @@ export function BottomNav() {
         {navItems.map((item) => {
           const Icon = item.icon
           const active = isActive(item.href)
-
           return (
             <Link
               key={item.href}
@@ -44,10 +38,8 @@ export function BottomNav() {
               <div className={`p-1.5 rounded-xl transition-all duration-200 ${active ? 'bg-oasis-accent/15' : ''}`}>
                 <Icon className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-medium">{item.label}</span>
-              {active && (
-                <div className="absolute -top-0 w-8 h-0.5 rounded-full bg-oasis-accent" />
-              )}
+              <span className="text-[10px] font-medium">{t(item.labelKey)}</span>
+              {active && <div className="absolute -top-0 w-8 h-0.5 rounded-full bg-oasis-accent" />}
             </Link>
           )
         })}

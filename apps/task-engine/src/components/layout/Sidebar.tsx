@@ -5,29 +5,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  LayoutDashboard,
-  CheckSquare,
-  FolderKanban,
-  Users,
-  BarChart3,
-  Activity,
-  Eye,
-  Settings,
-  ChevronLeft,
-  ChevronRight,
-  ShieldCheck,
+  LayoutDashboard, CheckSquare, FolderKanban, Users,
+  BarChart3, Activity, Eye, Settings,
+  ChevronLeft, ChevronRight, ShieldCheck,
 } from 'lucide-react'
-
-const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/tasks', label: 'Tasks', icon: CheckSquare },
-  { href: '/projects', label: 'Projects', icon: FolderKanban },
-  { href: '/users', label: 'Users', icon: Users },
-  { href: '/analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/activity', label: 'Activity', icon: Activity },
-  { href: '/visitors', label: 'Visitors', icon: Eye },
-  { href: '/settings', label: 'Settings', icon: Settings },
-]
+import { useLanguage } from '@/context/LanguageContext'
 
 interface SidebarProps {
   taskCount?: number
@@ -36,6 +18,18 @@ interface SidebarProps {
 export function Sidebar({ taskCount }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
+  const { t } = useLanguage()
+
+  const navItems = [
+    { href: '/',          labelKey: 'dashboard', icon: LayoutDashboard },
+    { href: '/tasks',     labelKey: 'tasks',     icon: CheckSquare },
+    { href: '/projects',  labelKey: 'projects',  icon: FolderKanban },
+    { href: '/users',     labelKey: 'users',     icon: Users },
+    { href: '/analytics', labelKey: 'analytics', icon: BarChart3 },
+    { href: '/activity',  labelKey: 'activity',  icon: Activity },
+    { href: '/visitors',  labelKey: 'visitors',  icon: Eye },
+    { href: '/settings',  labelKey: 'settings',  icon: Settings },
+  ]
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/'
@@ -64,9 +58,7 @@ export function Sidebar({ taskCount }: SidebarProps) {
                 }`}
             >
               <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-all duration-200 ${
-                active
-                  ? 'bg-oasis-accent/20'
-                  : 'bg-transparent group-hover:bg-white/5'
+                active ? 'bg-oasis-accent/20' : 'bg-transparent group-hover:bg-white/5'
               }`}>
                 <Icon className="w-[18px] h-[18px]" />
               </div>
@@ -79,7 +71,7 @@ export function Sidebar({ taskCount }: SidebarProps) {
                     transition={{ duration: 0.15 }}
                     className="text-sm font-medium whitespace-nowrap overflow-hidden"
                   >
-                    {item.label}
+                    {t(item.labelKey)}
                   </motion.span>
                 )}
               </AnimatePresence>
@@ -100,7 +92,7 @@ export function Sidebar({ taskCount }: SidebarProps) {
         })}
       </nav>
 
-      {/* Admin button — pinned above collapse toggle */}
+      {/* Admin link */}
       <div className="px-3 py-4 border-t border-white/10">
         <Link
           href="/admin"
@@ -118,7 +110,7 @@ export function Sidebar({ taskCount }: SidebarProps) {
                 transition={{ duration: 0.15 }}
                 className="text-sm font-medium whitespace-nowrap overflow-hidden"
               >
-                Admin Panel
+                {t('adminPanel')}
               </motion.span>
             )}
           </AnimatePresence>

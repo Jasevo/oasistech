@@ -4,31 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useCallback } from 'react'
 import { Search, X } from 'lucide-react'
 import { AIInputHelper } from '@/components/ai/AIInputHelper'
-
-const statusTabs = [
-  { value: 'all', label: 'All' },
-  { value: 'todo', label: 'To Do' },
-  { value: 'in-progress', label: 'In Progress' },
-  { value: 'completed', label: 'Completed' },
-]
-
-const priorityOptions = [
-  { value: 'all', label: 'All Priorities' },
-  { value: 'urgent', label: 'Urgent' },
-  { value: 'high', label: 'High' },
-  { value: 'medium', label: 'Medium' },
-  { value: 'low', label: 'Low' },
-]
-
-const sortOptions = [
-  { value: '-createdAt', label: 'Newest First' },
-  { value: 'createdAt', label: 'Oldest First' },
-  { value: '-dueDate', label: 'Due Date (Latest)' },
-  { value: 'dueDate', label: 'Due Date (Earliest)' },
-  { value: 'title', label: 'Title A-Z' },
-  { value: '-title', label: 'Title Z-A' },
-  { value: '-priority', label: 'Priority (High First)' },
-]
+import { useLanguage } from '@/context/LanguageContext'
 
 interface TaskFiltersProps {
   currentStatus?: string
@@ -51,7 +27,33 @@ export function TaskFilters({
 }: TaskFiltersProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { t } = useLanguage()
   const [search, setSearch] = useState(currentSearch || '')
+
+  const statusTabs = [
+    { value: 'all',         label: t('all') },
+    { value: 'todo',        label: t('todo') },
+    { value: 'in-progress', label: t('inProgress') },
+    { value: 'completed',   label: t('completed') },
+  ]
+
+  const priorityOptions = [
+    { value: 'all',    label: t('allPriorities') },
+    { value: 'urgent', label: t('urgent') },
+    { value: 'high',   label: t('high') },
+    { value: 'medium', label: t('medium') },
+    { value: 'low',    label: t('low') },
+  ]
+
+  const sortOptions = [
+    { value: '-createdAt', label: t('newestFirst') },
+    { value: 'createdAt',  label: t('oldestFirst') },
+    { value: '-dueDate',   label: t('dueDateLatest') },
+    { value: 'dueDate',    label: t('dueDateEarliest') },
+    { value: 'title',      label: t('titleAZ') },
+    { value: '-title',     label: t('titleZA') },
+    { value: '-priority',  label: t('priorityHigh') },
+  ]
 
   const updateParams = useCallback(
     (key: string, value: string) => {
@@ -77,12 +79,11 @@ export function TaskFilters({
     router.push('/tasks')
   }
 
-  const hasFilters =
-    currentStatus || currentPriority || currentProject || currentSearch || currentSort
+  const hasFilters = currentStatus || currentPriority || currentProject || currentSearch || currentSort
 
   return (
     <div className="space-y-4">
-      {/* Status Tabs */}
+      {/* Status tabs */}
       <div className="flex items-center gap-1 overflow-x-auto scrollbar-thin pb-1">
         {statusTabs.map((tab) => (
           <button
@@ -97,30 +98,27 @@ export function TaskFilters({
             {tab.label}
           </button>
         ))}
-        <span className="text-sm text-gray-400 ml-2 whitespace-nowrap">{totalDocs} results</span>
+        <span className="text-sm text-gray-400 ml-2 whitespace-nowrap">
+          {totalDocs} {t('results')}
+        </span>
       </div>
 
-      {/* Search + Filters Row */}
+      {/* Search + filters row */}
       <div className="flex flex-col sm:flex-row gap-3">
-        {/* Search with AI helper */}
         <form onSubmit={handleSearch} className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search tasks..."
+            placeholder={t('search')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-10 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:border-oasis-accent focus:ring-1 focus:ring-oasis-accent/20 focus:outline-none"
           />
-          {/* AI helper button inside search field */}
           <div className="absolute right-2 top-1/2 -translate-y-1/2">
             <AIInputHelper
               fieldContext="task search query"
               surroundingContext={`Tasks page showing ${totalDocs} tasks. Current filters: status=${currentStatus || 'all'}, priority=${currentPriority || 'all'}`}
-              onFill={(val) => {
-                setSearch(val)
-                updateParams('search', val)
-              }}
+              onFill={(val) => { setSearch(val); updateParams('search', val) }}
               pageContext="Tasks"
             />
           </div>
@@ -142,7 +140,7 @@ export function TaskFilters({
             onChange={(e) => updateParams('project', e.target.value)}
             className="px-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:border-oasis-accent focus:outline-none min-w-[140px]"
           >
-            <option value="">All Projects</option>
+            <option value="">{t('allProjects')}</option>
             {projects.map((p) => (
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
@@ -166,7 +164,7 @@ export function TaskFilters({
           className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-oasis-primary transition-colors"
         >
           <X className="w-3.5 h-3.5" />
-          Clear all filters
+          {t('clearFilters')}
         </button>
       )}
     </div>

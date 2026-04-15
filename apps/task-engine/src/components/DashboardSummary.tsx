@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { CompletionRing } from './charts/CompletionRing'
 import { Target, Clock, AlertCircle } from 'lucide-react'
+import { useLanguage } from '@/context/LanguageContext'
 
 interface DashboardSummaryProps {
   total: number
@@ -11,15 +12,16 @@ interface DashboardSummaryProps {
 }
 
 export function DashboardSummary({ total, completed, inProgress }: DashboardSummaryProps) {
-  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0
-  const todo = total - completed - inProgress
-  const todoPct = total > 0 ? Math.round((todo / total) * 100) : 0
+  const { t } = useLanguage()
+  const percentage    = total > 0 ? Math.round((completed / total) * 100) : 0
+  const todo          = total - completed - inProgress
+  const todoPct       = total > 0 ? Math.round((todo / total) * 100) : 0
   const inProgressPct = total > 0 ? Math.round((inProgress / total) * 100) : 0
 
   const progressItems = [
     {
       icon: Target,
-      label: 'Tasks Done',
+      label: t('tasksDone'),
       value: `${completed} / ${total}`,
       percent: percentage,
       color: 'bg-emerald-500',
@@ -28,7 +30,7 @@ export function DashboardSummary({ total, completed, inProgress }: DashboardSumm
     },
     {
       icon: AlertCircle,
-      label: 'To Do Tasks',
+      label: t('toDoTasks'),
       value: String(todo),
       percent: todoPct,
       color: 'bg-oasis-accent',
@@ -37,7 +39,7 @@ export function DashboardSummary({ total, completed, inProgress }: DashboardSumm
     },
     {
       icon: Clock,
-      label: 'In Progress Tasks',
+      label: t('inProgressTasks'),
       value: String(inProgress),
       percent: inProgressPct,
       color: 'bg-blue-500',
@@ -51,10 +53,9 @@ export function DashboardSummary({ total, completed, inProgress }: DashboardSumm
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.3 }}
-      className="glass-card rounded-2xl p-6 lg:p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-      whileHover={{ scale: 1.01 }}
+      className="glass-card rounded-2xl p-6 hover:shadow-lg transition-all duration-300"
     >
-      <h2 className="text-base font-bold text-gray-900 mb-6">Progress Overview</h2>
+      <h2 className="text-base font-bold text-gray-900 mb-6">{t('progressOverview')}</h2>
       <div className="flex flex-col sm:flex-row items-center gap-8">
         <CompletionRing percentage={percentage} />
         <div className="flex-1 w-full space-y-5">

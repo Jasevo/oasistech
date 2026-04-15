@@ -3,22 +3,21 @@
 import { motion } from 'framer-motion'
 import { CheckSquare, Clock, CircleDot, ListChecks, TrendingUp, TrendingDown } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import { useLanguage } from '@/context/LanguageContext'
 
 interface StatCardProps {
   label: string
   value: number
   icon: LucideIcon
   index: number
-  subtitle?: string
+  trendText?: string
   gradient: string
   textLight?: boolean
   trendIcon?: LucideIcon
-  trendText?: string
-  /** 0–100, drives the animated bottom bar */
   barPercent?: number
 }
 
-function StatCard({ label, value, icon: Icon, index, subtitle, gradient, textLight = true, trendIcon: TrendIcon, trendText, barPercent = 0 }: StatCardProps) {
+function StatCard({ label, value, icon: Icon, index, gradient, textLight = true, trendIcon: TrendIcon, trendText, barPercent = 0 }: StatCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -27,7 +26,6 @@ function StatCard({ label, value, icon: Icon, index, subtitle, gradient, textLig
       className={`relative overflow-hidden rounded-2xl p-5 lg:p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-default ${gradient}`}
       whileHover={{ scale: 1.02 }}
     >
-      {/* Decorative circles */}
       <div className="absolute -right-4 -top-4 w-24 h-24 rounded-full bg-white/10" />
       <div className="absolute -right-2 -bottom-6 w-20 h-20 rounded-full bg-white/5" />
 
@@ -43,17 +41,14 @@ function StatCard({ label, value, icon: Icon, index, subtitle, gradient, textLig
         <p className={`text-4xl lg:text-5xl font-bold mt-3 tracking-tight ${textLight ? 'text-white' : 'text-gray-900'}`}>
           {value}
         </p>
-        {(subtitle || trendText) && (
+        {trendText && (
           <div className={`flex items-center gap-1.5 mt-2 ${textLight ? 'text-white/70' : 'text-gray-600'}`}>
             {TrendIcon && <TrendIcon className="w-3.5 h-3.5" />}
-            <p className="text-xs font-medium">
-              {trendText || subtitle}
-            </p>
+            <p className="text-xs font-medium">{trendText}</p>
           </div>
         )}
       </div>
 
-      {/* Bottom progress bar — reflects real data */}
       <div className={`absolute bottom-0 left-0 right-0 h-1 ${textLight ? 'bg-white/10' : 'bg-black/5'}`}>
         <motion.div
           className={`h-full ${textLight ? 'bg-white/30' : 'bg-black/10'}`}
@@ -74,47 +69,46 @@ interface StatsCardsProps {
 }
 
 export function StatsCards({ total, todo, inProgress, completed }: StatsCardsProps) {
-  const completionPct = total > 0 ? Math.round((completed / total) * 100) : 0
-
-  const todoPct       = total > 0 ? Math.round((todo / total) * 100) : 0
-  const inProgressPct = total > 0 ? Math.round((inProgress / total) * 100) : 0
-  // "active" bar for total = proportion of tasks not yet completed
-  const activePct     = total > 0 ? Math.round(((todo + inProgress) / total) * 100) : 0
+  const { t } = useLanguage()
+  const completionPct  = total > 0 ? Math.round((completed / total) * 100) : 0
+  const todoPct        = total > 0 ? Math.round((todo / total) * 100) : 0
+  const inProgressPct  = total > 0 ? Math.round((inProgress / total) * 100) : 0
+  const activePct      = total > 0 ? Math.round(((todo + inProgress) / total) * 100) : 0
 
   const stats = [
     {
-      label: 'Total Tasks',
+      label: t('totalTasks'),
       value: total,
       icon: ListChecks,
       gradient: 'stat-gradient-1',
       trendIcon: TrendingUp,
-      trendText: total > 0 ? `${todo + inProgress} active` : 'No tasks yet',
+      trendText: total > 0 ? `${todo + inProgress} ${t('active_stat')}` : t('noTasksYet'),
       barPercent: activePct,
     },
     {
-      label: 'To Do',
+      label: t('todo'),
       value: todo,
       icon: CircleDot,
       gradient: 'stat-gradient-2',
       textLight: false,
-      trendText: total > 0 ? `${todoPct}% of total` : undefined,
+      trendText: total > 0 ? `${todoPct}% ${t('ofTotal')}` : undefined,
       barPercent: todoPct,
     },
     {
-      label: 'In Progress',
+      label: t('inProgress'),
       value: inProgress,
       icon: Clock,
       gradient: 'stat-gradient-3',
-      trendText: total > 0 ? `${inProgressPct}% active` : undefined,
+      trendText: total > 0 ? `${inProgressPct}% ${t('active_stat')}` : undefined,
       barPercent: inProgressPct,
     },
     {
-      label: 'Completed',
+      label: t('completed'),
       value: completed,
       icon: CheckSquare,
       gradient: 'stat-gradient-4',
       trendIcon: completionPct >= 50 ? TrendingUp : TrendingDown,
-      trendText: `${completionPct}% completion`,
+      trendText: `${completionPct}% ${t('completion')}`,
       barPercent: completionPct,
     },
   ]
