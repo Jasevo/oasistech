@@ -144,7 +144,7 @@ export function TopBar({ userName = 'Admin' }: TopBarProps) {
         <div className="flex items-center gap-2">
 
           {/* Search */}
-          <div ref={searchContainerRef} className="relative">
+          <div ref={searchContainerRef} className="relative flex items-center">
             <AnimatePresence>
               {searchOpen && (
                 <motion.div
@@ -152,7 +152,7 @@ export function TopBar({ userName = 'Admin' }: TopBarProps) {
                   animate={{ width: 260, opacity: 1 }}
                   exit={{ width: 0, opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="overflow-visible"
+                  className="overflow-hidden"
                 >
                   <div className="relative">
                     <input
@@ -171,17 +171,20 @@ export function TopBar({ userName = 'Admin' }: TopBarProps) {
                       </div>
                     )}
                   </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-                  {/* Results dropdown */}
-                  <AnimatePresence>
-                    {showDropdown && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -4 }}
-                        transition={{ duration: 0.15 }}
-                        className="absolute top-full left-0 right-0 mt-1.5 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50 max-h-80 overflow-y-auto"
-                      >
+            {/* Results dropdown — outside the animated div so it's never clipped */}
+            <AnimatePresence>
+              {showDropdown && (
+                <motion.div
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 4 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-10 top-full mt-2 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-[60] max-h-80 overflow-y-auto"
+                >
                         {!hasResults && !loading && (
                           <div className="px-4 py-3 text-sm text-gray-400 text-center">
                             {lang === 'ar' ? 'لا توجد نتائج' : 'No results found'}
@@ -261,9 +264,6 @@ export function TopBar({ userName = 'Admin' }: TopBarProps) {
                             </button>
                           </div>
                         )}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
                 </motion.div>
               )}
             </AnimatePresence>
