@@ -1,4 +1,5 @@
 import { fetchRecentTasks } from '@/lib/tasks'
+import { fetchRecentVisitActivity } from '@/lib/visits'
 import { ActivityTimeline } from '@/components/ActivityTimeline'
 import { Activity } from 'lucide-react'
 
@@ -9,18 +10,17 @@ export const metadata = {
 }
 
 export default async function ActivityPage() {
-  const { tasks } = await fetchRecentTasks(30)
+  const [{ tasks }, visitActivity] = await Promise.all([
+    fetchRecentTasks(30),
+    fetchRecentVisitActivity(30),
+  ])
 
-  // Build activity entries from task data
+  // Build task activity entries
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const activities = (tasks as any[]).map((task: { id: string; title: string; status: string; createdAt: string; updatedAt: string; project?: { name: string } | string | null }) => {
+  const taskActivities = (tasks as any[]).map((task: { id: string; title: string; status: string; createdAt: string; updatedAt: string; project?: { name: string } | string | null }) => {
     const projectName = task.project && typeof task.project === 'object' ? task.project.name : null
     const isNew = new Date(task.updatedAt).getTime() - new Date(task.createdAt).getTime() < 60000
-    const action = isNew
-      ? 'created'
-      : task.status === 'completed'
-        ? 'completed'
-        : 'updated'
+    const action = isNew ? 'created' : task.status === 'completed' ? 'completed' : 'updated'
 
     return {
       id: task.id,
@@ -30,8 +30,27 @@ export default async function ActivityPage() {
       status: task.status,
       projectName,
       timestamp: task.updatedAt,
+      type: 'task' as const,
     }
   })
+
+  // Merge and sort all activity by timestamp descending
+  const allActivities = [
+    ...taskActivities,
+    ...visitActivity.map((v) => ({
+      id: v.id,
+      taskId: '',
+      taskTitle: '',
+      action: v.action,
+      status: '',
+      projectName: null,
+      timestamp: v.timestamp,
+      type: 'visit' as const,
+      page: v.page,
+      device: v.device,
+      browser: v.browser,
+    })),
+  ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 
   return (
     <div className="space-y-5">
@@ -44,17 +63,17 @@ export default async function ActivityPage() {
           </div>
           <div>
             <h1 className="text-xl font-bold tracking-tight text-gray-900">Activity</h1>
-            <p className="text-sm text-gray-500 mt-0.5">Recent task activity and changes.</p>
+            <p className="text-sm text-gray-500 mt-0.5">All recent actions — task updates and page visits.</p>
           </div>
           <div className="ml-auto">
             <span className="text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200 rounded-full px-3 py-1">
-              {activities.length} events
+              {allActivities.length} events
             </span>
           </div>
         </div>
       </div>
 
-      <ActivityTimeline activities={activities} />
+      <ActivityTimeline activities={allActivities} />
     </div>
   )
 }

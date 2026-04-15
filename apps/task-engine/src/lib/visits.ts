@@ -1,5 +1,52 @@
 import { getPayloadClient } from './payload'
 
+const PAGE_LABELS: Record<string, string> = {
+  '/':           'Dashboard',
+  '/tasks':      'Tasks',
+  '/projects':   'Projects',
+  '/users':      'Users',
+  '/analytics':  'Analytics',
+  '/activity':   'Activity',
+  '/visitors':   'Visitors',
+  '/settings':   'Settings',
+}
+
+export async function fetchRecentVisitActivity(limit = 20) {
+  try {
+    const payload = await getPayloadClient()
+    const result = await payload.find({
+      collection: 'site-visits',
+      sort: '-createdAt',
+      limit,
+      overrideAccess: true,
+    })
+
+    return result.docs.map((v: any) => {
+      const page = (v.page as string) || '/'
+      const label = PAGE_LABELS[page] || page
+      const taskMatch = page.match(/^\/tasks\/(.+)$/)
+      const projectMatch = page.match(/^\/projects\/(.+)$/)
+
+      let action = `visited ${label}`
+      if (taskMatch) action = 'viewed a task'
+      if (projectMatch) action = 'viewed a project'
+
+      return {
+        id: v.id as string,
+        actor: 'Admin',
+        action,
+        page,
+        device: (v.device as string) || 'unknown',
+        browser: (v.browser as string) || 'Unknown',
+        timestamp: v.createdAt as string,
+        type: 'visit' as const,
+      }
+    })
+  } catch {
+    return []
+  }
+}
+
 export async function fetchVisits(limit = 50) {
   try {
     const payload = await getPayloadClient()

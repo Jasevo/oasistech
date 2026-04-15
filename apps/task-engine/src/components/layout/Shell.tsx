@@ -7,6 +7,7 @@ import { Toaster } from 'sonner'
 import { AIProvider } from '@/context/AIContext'
 import { LanguageProvider } from '@/context/LanguageContext'
 import { OasisAIDrawer } from '@/components/ai/OasisAIDrawer'
+import { PageTracker } from '@/components/PageTracker'
 
 interface ShellProps {
   children: React.ReactNode
@@ -50,6 +51,9 @@ export function Shell({ children, userName, openTaskCount }: ShellProps) {
             </div>
             <BottomNav />
           </div>
+
+          {/* Page visit tracker */}
+          <PageTracker />
 
           {/* Oasis AI Drawer — available on every page */}
           <OasisAIDrawer />

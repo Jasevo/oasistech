@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Plus, ArrowRight, CheckCircle2, Activity } from 'lucide-react'
+import { Plus, ArrowRight, CheckCircle2, Activity, Eye, Monitor, Smartphone } from 'lucide-react'
 import { EmptyState } from './ui/EmptyState'
 
 interface ActivityEntry {
@@ -14,6 +14,10 @@ interface ActivityEntry {
   status: string
   projectName: string | null
   timestamp: string
+  type: 'task' | 'visit'
+  page?: string
+  device?: string
+  browser?: string
 }
 
 function getRelativeTime(timestamp: string): string {
@@ -42,47 +46,32 @@ function getDateGroup(timestamp: string): string {
   return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
 }
 
-const actionIcons = {
-  created: Plus,
-  updated: ArrowRight,
+const taskActionIcons = {
+  created:   Plus,
+  updated:   ArrowRight,
   completed: CheckCircle2,
 }
 
-const actionColors = {
-  created: 'bg-blue-100 text-blue-600',
-  updated: 'bg-oasis-accent/20 text-oasis-accent',
+const taskActionColors = {
+  created:   'bg-blue-100 text-blue-600',
+  updated:   'bg-oasis-accent/20 text-oasis-accent',
   completed: 'bg-green-100 text-green-600',
-}
-
-function getActionText(action: string, taskTitle: string, status: string): React.ReactNode {
-  switch (action) {
-    case 'created':
-      return <><strong className="text-gray-900">{taskTitle}</strong> was created</>
-    case 'completed':
-      return <><strong className="text-gray-900">{taskTitle}</strong> was completed</>
-    default:
-      return <><strong className="text-gray-900">{taskTitle}</strong> moved to <strong>{status.replace('-', ' ')}</strong></>
-  }
 }
 
 export function ActivityTimeline({ activities }: { activities: ActivityEntry[] }) {
   const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  useEffect(() => { setMounted(true) }, [])
 
   if (activities.length === 0) {
     return (
       <EmptyState
         icon={Activity}
         title="No activity yet"
-        description="Activity will appear here as tasks are created and updated."
+        description="Activity will appear here as tasks are created and pages are visited."
       />
     )
   }
 
-  // Group by date — use static date format on server, relative on client
   const groups = new Map<string, ActivityEntry[]>()
   for (const activity of activities) {
     const group = mounted
@@ -98,31 +87,64 @@ export function ActivityTimeline({ activities }: { activities: ActivityEntry[] }
         <div key={dateGroup}>
           <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">{dateGroup}</h3>
           <div className="relative">
-            {/* Timeline line */}
             <div className="absolute left-[17px] top-0 bottom-0 w-0.5 bg-oasis-accent/20" />
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {entries.map((entry, index) => {
-                const Icon = actionIcons[entry.action as keyof typeof actionIcons] || ArrowRight
-                const colorClass = actionColors[entry.action as keyof typeof actionColors] || actionColors.updated
+                const isVisit = entry.type === 'visit'
+
+                if (isVisit) {
+                  const DeviceIcon = entry.device === 'mobile' || entry.device === 'tablet' ? Smartphone : Monitor
+                  return (
+                    <motion.div
+                      key={`${entry.id}-${index}`}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: Math.min(index * 0.03, 0.5), duration: 0.2 }}
+                      className="relative flex gap-4"
+                    >
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 z-10 bg-gray-100 text-gray-500">
+                        <Eye className="w-4 h-4" />
+                      </div>
+                      <div className="flex-1 bg-white rounded-lg border border-gray-100 px-3.5 py-2.5 hover:border-oasis-accent/20 transition-colors">
+                        <p className="text-sm text-gray-600">
+                          <strong className="text-gray-800">Admin</strong> {entry.action}
+                        </p>
+                        <div className="flex items-center gap-3 mt-1">
+                          <span className="text-[11px] text-gray-400 flex items-center gap-1">
+                            <DeviceIcon className="w-3 h-3" />
+                            {entry.browser} · {entry.device}
+                          </span>
+                          <span className="text-[11px] text-gray-400 ml-auto">
+                            {mounted
+                              ? getRelativeTime(entry.timestamp)
+                              : new Date(entry.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )
+                }
+
+                const Icon = taskActionIcons[entry.action as keyof typeof taskActionIcons] || ArrowRight
+                const colorClass = taskActionColors[entry.action as keyof typeof taskActionColors] || taskActionColors.updated
 
                 return (
                   <motion.div
                     key={`${entry.id}-${index}`}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05, duration: 0.25 }}
-                    className="relative flex gap-4 pl-0"
+                    transition={{ delay: Math.min(index * 0.03, 0.5), duration: 0.2 }}
+                    className="relative flex gap-4"
                   >
-                    {/* Icon node */}
                     <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 z-10 ${colorClass}`}>
                       <Icon className="w-4 h-4" />
                     </div>
-
-                    {/* Content */}
                     <div className="flex-1 bg-white rounded-lg border border-gray-200 p-3.5 hover:border-oasis-accent/30 transition-colors">
                       <p className="text-sm text-gray-600">
-                        {getActionText(entry.action, entry.taskTitle, entry.status)}
+                        {entry.action === 'created' && <><strong className="text-gray-900">{entry.taskTitle}</strong> was created</>}
+                        {entry.action === 'completed' && <><strong className="text-gray-900">{entry.taskTitle}</strong> was completed</>}
+                        {entry.action === 'updated' && <><strong className="text-gray-900">{entry.taskTitle}</strong> moved to <strong>{entry.status.replace('-', ' ')}</strong></>}
                       </p>
                       <div className="flex items-center gap-3 mt-1.5">
                         {entry.projectName && (
@@ -135,12 +157,14 @@ export function ActivityTimeline({ activities }: { activities: ActivityEntry[] }
                             ? getRelativeTime(entry.timestamp)
                             : new Date(entry.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                         </span>
-                        <Link
-                          href={`/tasks/${entry.taskId}`}
-                          className="text-xs text-oasis-primary hover:text-oasis-accent transition-colors ml-auto"
-                        >
-                          View task →
-                        </Link>
+                        {entry.taskId && (
+                          <Link
+                            href={`/tasks/${entry.taskId}`}
+                            className="text-xs text-oasis-primary hover:text-oasis-accent transition-colors ml-auto"
+                          >
+                            View task →
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </motion.div>
