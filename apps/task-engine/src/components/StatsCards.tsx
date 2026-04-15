@@ -14,9 +14,11 @@ interface StatCardProps {
   textLight?: boolean
   trendIcon?: LucideIcon
   trendText?: string
+  /** 0–100, drives the animated bottom bar */
+  barPercent?: number
 }
 
-function StatCard({ label, value, icon: Icon, index, subtitle, gradient, textLight = true, trendIcon: TrendIcon, trendText }: StatCardProps) {
+function StatCard({ label, value, icon: Icon, index, subtitle, gradient, textLight = true, trendIcon: TrendIcon, trendText, barPercent = 0 }: StatCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -51,13 +53,13 @@ function StatCard({ label, value, icon: Icon, index, subtitle, gradient, textLig
         )}
       </div>
 
-      {/* Bottom decorative bar */}
+      {/* Bottom progress bar — reflects real data */}
       <div className={`absolute bottom-0 left-0 right-0 h-1 ${textLight ? 'bg-white/10' : 'bg-black/5'}`}>
         <motion.div
           className={`h-full ${textLight ? 'bg-white/30' : 'bg-black/10'}`}
           initial={{ width: 0 }}
-          animate={{ width: '60%' }}
-          transition={{ duration: 1, delay: index * 0.1 + 0.3 }}
+          animate={{ width: `${barPercent}%` }}
+          transition={{ duration: 1, delay: index * 0.1 + 0.3, ease: 'easeOut' }}
         />
       </div>
     </motion.div>
@@ -74,6 +76,11 @@ interface StatsCardsProps {
 export function StatsCards({ total, todo, inProgress, completed }: StatsCardsProps) {
   const completionPct = total > 0 ? Math.round((completed / total) * 100) : 0
 
+  const todoPct       = total > 0 ? Math.round((todo / total) * 100) : 0
+  const inProgressPct = total > 0 ? Math.round((inProgress / total) * 100) : 0
+  // "active" bar for total = proportion of tasks not yet completed
+  const activePct     = total > 0 ? Math.round(((todo + inProgress) / total) * 100) : 0
+
   const stats = [
     {
       label: 'Total Tasks',
@@ -82,6 +89,7 @@ export function StatsCards({ total, todo, inProgress, completed }: StatsCardsPro
       gradient: 'stat-gradient-1',
       trendIcon: TrendingUp,
       trendText: total > 0 ? `${todo + inProgress} active` : 'No tasks yet',
+      barPercent: activePct,
     },
     {
       label: 'To Do',
@@ -89,14 +97,16 @@ export function StatsCards({ total, todo, inProgress, completed }: StatsCardsPro
       icon: CircleDot,
       gradient: 'stat-gradient-2',
       textLight: false,
-      trendText: total > 0 ? `${Math.round((todo / total) * 100)}% of total` : undefined,
+      trendText: total > 0 ? `${todoPct}% of total` : undefined,
+      barPercent: todoPct,
     },
     {
       label: 'In Progress',
       value: inProgress,
       icon: Clock,
       gradient: 'stat-gradient-3',
-      trendText: total > 0 ? `${Math.round((inProgress / total) * 100)}% active` : undefined,
+      trendText: total > 0 ? `${inProgressPct}% active` : undefined,
+      barPercent: inProgressPct,
     },
     {
       label: 'Completed',
@@ -105,6 +115,7 @@ export function StatsCards({ total, todo, inProgress, completed }: StatsCardsPro
       gradient: 'stat-gradient-4',
       trendIcon: completionPct >= 50 ? TrendingUp : TrendingDown,
       trendText: `${completionPct}% completion`,
+      barPercent: completionPct,
     },
   ]
 

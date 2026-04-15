@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Plus, Calendar, ChevronDown } from 'lucide-react'
+import { Plus, Calendar } from 'lucide-react'
 
 function getGreeting(): string {
   const hour = new Date().getHours()
@@ -76,9 +76,6 @@ export function Greeting({ name, taskSummary }: GreetingProps) {
           <Plus className="w-4 h-4" />
           Create Task
         </Link>
-        <button className="p-2.5 rounded-xl glass-card text-gray-600 hover:text-oasis-primary transition-colors">
-          <ChevronDown className="w-4 h-4" />
-        </button>
       </div>
     </motion.div>
   )

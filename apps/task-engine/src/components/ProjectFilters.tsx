@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useCallback } from 'react'
 import { Search, X } from 'lucide-react'
+import { AIInputHelper } from '@/components/ai/AIInputHelper'
 
 interface ProjectFiltersProps {
   currentStatus?: string
@@ -77,8 +78,16 @@ export function ProjectFilters({
             placeholder="Search projects..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:border-oasis-accent focus:ring-1 focus:ring-oasis-accent/20 focus:outline-none"
+            className="w-full pl-9 pr-10 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:border-oasis-accent focus:ring-1 focus:ring-oasis-accent/20 focus:outline-none"
           />
+          <div className="absolute right-2 top-1/2 -translate-y-1/2">
+            <AIInputHelper
+              fieldContext="project search query"
+              surroundingContext={`Projects page showing ${totalCount} projects. Current filter: status=${currentStatus || 'all'}`}
+              onFill={(val) => { setSearch(val); updateParams('search', val) }}
+              pageContext="Projects"
+            />
+          </div>
         </form>
 
         {/* Sort */}

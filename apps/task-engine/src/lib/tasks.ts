@@ -110,6 +110,34 @@ export async function fetchUpcomingDeadlines(limit = 4) {
   }
 }
 
+// Priority weight for sorting: urgent > high > medium > low
+const PRIORITY_ORDER: Record<string, number> = { urgent: 4, high: 3, medium: 2, low: 1 }
+
+export async function fetchTopPriorityTasks(limit = 3) {
+  try {
+    const payload = await getPayloadClient()
+    const tasks = await payload.find({
+      collection: 'tasks',
+      where: { status: { not_equals: 'completed' } },
+      sort: '-updatedAt',
+      limit: 50, // fetch more, then sort by priority weight client-side
+      depth: 1,
+      overrideAccess: true,
+    })
+
+    const sorted = [...tasks.docs].sort((a, b) => {
+      const aPriority = PRIORITY_ORDER[(a.priority as string) ?? 'low'] ?? 0
+      const bPriority = PRIORITY_ORDER[(b.priority as string) ?? 'low'] ?? 0
+      return bPriority - aPriority
+    })
+
+    return { tasks: sorted.slice(0, limit), error: null }
+  } catch (error) {
+    console.error('Failed to fetch top priority tasks:', error)
+    return { tasks: [], error: 'Failed to load priority tasks.' }
+  }
+}
+
 export async function fetchRecentTasks(limit = 5) {
   try {
     const payload = await getPayloadClient()

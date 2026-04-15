@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useCallback } from 'react'
 import { Search, X } from 'lucide-react'
+import { AIInputHelper } from '@/components/ai/AIInputHelper'
 
 interface UserFiltersProps {
   currentRole?: string
@@ -90,8 +91,16 @@ export function UserFilters({
             placeholder="Search by name or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:border-oasis-accent focus:ring-1 focus:ring-oasis-accent/20 focus:outline-none"
+            className="w-full pl-9 pr-10 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:border-oasis-accent focus:ring-1 focus:ring-oasis-accent/20 focus:outline-none"
           />
+          <div className="absolute right-2 top-1/2 -translate-y-1/2">
+            <AIInputHelper
+              fieldContext="user search query"
+              surroundingContext={`Users page showing ${totalCount} users. Filter: role=${currentRole || 'all'}`}
+              onFill={(val) => { setSearch(val); updateParams('search', val) }}
+              pageContext="Users"
+            />
+          </div>
         </form>
 
         {/* Sort */}

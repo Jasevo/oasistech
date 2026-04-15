@@ -2,7 +2,8 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useCallback } from 'react'
-import { Search, X, SlidersHorizontal } from 'lucide-react'
+import { Search, X } from 'lucide-react'
+import { AIInputHelper } from '@/components/ai/AIInputHelper'
 
 const statusTabs = [
   { value: 'all', label: 'All' },
@@ -63,7 +64,7 @@ export function TaskFilters({
       params.delete('page')
       router.push(`?${params.toString()}`)
     },
-    [router, searchParams]
+    [router, searchParams],
   )
 
   const handleSearch = (e: React.FormEvent) => {
@@ -76,7 +77,8 @@ export function TaskFilters({
     router.push('/tasks')
   }
 
-  const hasFilters = currentStatus || currentPriority || currentProject || currentSearch || currentSort
+  const hasFilters =
+    currentStatus || currentPriority || currentProject || currentSearch || currentSort
 
   return (
     <div className="space-y-4">
@@ -100,6 +102,7 @@ export function TaskFilters({
 
       {/* Search + Filters Row */}
       <div className="flex flex-col sm:flex-row gap-3">
+        {/* Search with AI helper */}
         <form onSubmit={handleSearch} className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
@@ -107,8 +110,20 @@ export function TaskFilters({
             placeholder="Search tasks..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:border-oasis-accent focus:ring-1 focus:ring-oasis-accent/20 focus:outline-none"
+            className="w-full pl-9 pr-10 py-2 text-sm bg-white border border-gray-200 rounded-lg focus:border-oasis-accent focus:ring-1 focus:ring-oasis-accent/20 focus:outline-none"
           />
+          {/* AI helper button inside search field */}
+          <div className="absolute right-2 top-1/2 -translate-y-1/2">
+            <AIInputHelper
+              fieldContext="task search query"
+              surroundingContext={`Tasks page showing ${totalDocs} tasks. Current filters: status=${currentStatus || 'all'}, priority=${currentPriority || 'all'}`}
+              onFill={(val) => {
+                setSearch(val)
+                updateParams('search', val)
+              }}
+              pageContext="Tasks"
+            />
+          </div>
         </form>
 
         <select
