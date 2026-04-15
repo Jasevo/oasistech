@@ -1,38 +1,43 @@
 import { NextResponse } from 'next/server'
-import { fetchRecentTasks } from '@/lib/tasks'
+import { fetchActivityLogs } from '@/lib/activityLogs'
 import { fetchRecentVisitActivity } from '@/lib/visits'
 
 export async function GET() {
   try {
-    const [{ tasks }, visitActivity] = await Promise.all([
-      fetchRecentTasks(10),
+    const [logs, visitActivity] = await Promise.all([
+      fetchActivityLogs(20),
       fetchRecentVisitActivity(10),
     ])
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const taskItems = (tasks as any[]).map((task: any) => {
-      const isNew = new Date(task.updatedAt).getTime() - new Date(task.createdAt).getTime() < 60000
-      const action = isNew ? 'created a task' : task.status === 'completed' ? 'completed a task' : 'updated a task'
-      return {
-        type: 'task',
-        action,
-        label: task.title,
-        timestamp: task.updatedAt,
-        href: `/tasks/${task.id}`,
-      }
-    })
+    const taskItems = logs.map((log) => ({
+      type: 'task' as const,
+      action: log.action === 'created' ? 'created a task'
+            : log.action === 'deleted' ? 'deleted a task'
+            : 'updated a task',
+      label: log.documentTitle,
+      changes: log.changes,
+      collection: log.collection,
+      documentId: log.documentId,
+      timestamp: log.createdAt,
+      actor: log.actor,
+      href: log.collection === 'tasks' ? `/tasks/${log.documentId}` : `/projects/${log.documentId}`,
+    }))
 
     const visitItems = visitActivity.map((v) => ({
-      type: 'visit',
+      type: 'visit' as const,
       action: v.action,
       label: v.page,
+      changes: [],
+      collection: '',
+      documentId: '',
       timestamp: v.timestamp,
+      actor: 'Admin',
       href: null,
     }))
 
     const combined = [...taskItems, ...visitItems]
       .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-      .slice(0, 6)
+      .slice(0, 8)
 
     return NextResponse.json(combined)
   } catch {

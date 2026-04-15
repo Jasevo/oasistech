@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { makeAfterChangeHook, makeAfterDeleteHook } from '../hooks/logActivity'
 
 export const Projects: CollectionConfig = {
   slug: 'projects',
@@ -53,4 +54,8 @@ export const Projects: CollectionConfig = {
     },
   ],
   timestamps: true,
+  hooks: {
+    afterChange: [makeAfterChangeHook('projects')],
+    afterDelete: [makeAfterDeleteHook('projects')],
+  },
 }
