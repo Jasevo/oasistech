@@ -3,10 +3,16 @@ import Groq from 'groq-sdk'
 import { fetchTaskStats } from '@/lib/tasks'
 import { fetchVisitStats } from '@/lib/visits'
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
   try {
+    const apiKey = process.env.GROQ_API_KEY
+    if (!apiKey) {
+      return NextResponse.json({ error: 'AI service not configured' }, { status: 503 })
+    }
+    const groq = new Groq({ apiKey })
+
     const { messages, context, type } = await req.json()
 
     // Fetch live site data to enrich the AI's awareness

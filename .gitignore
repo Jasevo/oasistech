@@ -36,9 +36,7 @@ Desktop.ini
 *.swo
 
 # Local tooling & notes
-.claude/
 .jack/
-CLAUDE.md
 *.local.md
 
 # Logs
