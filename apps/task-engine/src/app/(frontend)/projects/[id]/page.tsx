@@ -1,4 +1,4 @@
-import { fetchProjectById } from '@/lib/projects'
+import { fetchProjectById, fetchProjects } from '@/lib/projects'
 import { notFound } from 'next/navigation'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { ProjectDetailView } from '@/components/ProjectDetailView'
@@ -11,7 +11,10 @@ interface ProjectDetailPageProps {
 
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const { id } = await params
-  const { project, tasks, error } = await fetchProjectById(id)
+  const [{ project, tasks, error }, { projects: allProjects }] = await Promise.all([
+    fetchProjectById(id),
+    fetchProjects({ status: 'active' }),
+  ])
 
   if (error || !project) {
     notFound()
@@ -21,6 +24,11 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   const completedCount = (tasks as any[]).filter((t) => t.status === 'completed').length
   const completionPercent =
     tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0
+
+  const projectOptions = (allProjects as Array<{ id: string | number; name?: string }>).map((p) => ({
+    id: String(p.id),
+    name: String(p.name ?? ''),
+  }))
 
   return (
     <div className="space-y-5">
@@ -43,6 +51,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
         tasks={tasks as never[]}
         completedCount={completedCount}
         completionPercent={completionPercent}
+        projects={projectOptions}
       />
     </div>
   )
