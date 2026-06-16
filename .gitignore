@@ -35,10 +35,11 @@ Desktop.ini
 *.swp
 *.swo
 
-# Tool configs
+# Local tooling & notes
 .claude/
 .jack/
 CLAUDE.md
+*.local.md
 
 # Logs
 *.log

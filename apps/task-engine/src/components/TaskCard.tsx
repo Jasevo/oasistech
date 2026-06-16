@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useTransition } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Calendar, AlertTriangle, Circle, Loader2, CheckCircle2, FolderKanban } from 'lucide-react'
+import { updateTaskStatus, type TaskStatus } from '@/actions/tasks'
 
 interface TaskCardProps {
   task: {
@@ -17,6 +18,12 @@ interface TaskCardProps {
     createdAt: string
   }
   index: number
+}
+
+const STATUS_CYCLE: Record<TaskStatus, TaskStatus> = {
+  'todo': 'in-progress',
+  'in-progress': 'completed',
+  'completed': 'todo',
 }
 
 const statusConfig = {
@@ -61,20 +68,34 @@ const statusBadge = {
 
 export function TaskCard({ task, index }: TaskCardProps) {
   const [mounted, setMounted] = useState(false)
+  const [currentStatus, setCurrentStatus] = useState<TaskStatus>(task.status)
+  const [isPending, startTransition] = useTransition()
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  useEffect(() => { setMounted(true) }, [])
 
   const isOverdue =
-    mounted && task.dueDate && task.status !== 'completed' && new Date(task.dueDate) < new Date()
+    mounted && task.dueDate && currentStatus !== 'completed' && new Date(task.dueDate) < new Date()
 
   const projectName =
     task.project && typeof task.project === 'object' ? task.project.name : null
 
-  const sc = statusConfig[task.status] ?? statusConfig.todo
+  const sc = statusConfig[currentStatus] ?? statusConfig.todo
   const pc = priorityConfig[task.priority] ?? priorityConfig.medium
   const { Icon: StatusIcon } = sc
+
+  function handleStatusClick(e: React.MouseEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    const nextStatus = STATUS_CYCLE[currentStatus]
+    setCurrentStatus(nextStatus)
+    startTransition(async () => {
+      const result = await updateTaskStatus(task.id, nextStatus)
+      if (result.error) {
+        // Revert on failure
+        setCurrentStatus(currentStatus)
+      }
+    })
+  }
 
   return (
     <motion.div
@@ -87,12 +108,17 @@ export function TaskCard({ task, index }: TaskCardProps) {
           className={`glass-card rounded-xl p-4 border-l-4 ${sc.accent} hover:shadow-md hover:-translate-y-0.5 transition-all duration-200`}
         >
           <div className="flex items-start gap-3">
-            {/* Status icon */}
-            <div
-              className={`w-9 h-9 rounded-xl ${sc.iconBg} flex items-center justify-center shrink-0 mt-0.5`}
+            {/* Status icon — clickable to cycle status */}
+            <button
+              onClick={handleStatusClick}
+              title={`Status: ${statusLabel[currentStatus]} — click to advance`}
+              disabled={isPending}
+              className={`w-9 h-9 rounded-xl ${sc.iconBg} flex items-center justify-center shrink-0 mt-0.5 hover:scale-110 active:scale-95 transition-transform cursor-pointer disabled:cursor-wait`}
             >
-              <StatusIcon className={`w-[18px] h-[18px] ${sc.iconColor}`} />
-            </div>
+              <StatusIcon
+                className={`w-[18px] h-[18px] ${sc.iconColor} ${isPending ? 'animate-spin' : currentStatus === 'in-progress' ? 'animate-spin' : ''}`}
+              />
+            </button>
 
             {/* Content */}
             <div className="flex-1 min-w-0">
@@ -102,9 +128,9 @@ export function TaskCard({ task, index }: TaskCardProps) {
                   {task.title}
                 </h3>
                 <span
-                  className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold shrink-0 ${statusBadge[task.status] ?? statusBadge.todo}`}
+                  className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold shrink-0 ${statusBadge[currentStatus] ?? statusBadge.todo}`}
                 >
-                  {statusLabel[task.status] ?? 'To Do'}
+                  {statusLabel[currentStatus] ?? 'To Do'}
                 </span>
               </div>
 

@@ -2,7 +2,8 @@ import { fetchTasks } from '@/lib/tasks'
 import { fetchProjects } from '@/lib/projects'
 import { TaskList } from '@/components/TaskList'
 import { TaskFilters } from '@/components/TaskFilters'
-import { CheckSquare, ChevronLeft, ChevronRight } from 'lucide-react'
+import { TasksPageHeader } from '@/components/TasksPageHeader'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
@@ -52,21 +53,12 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
   return (
     <div className="space-y-5">
       {/* Page header */}
-      <div className="glass-card rounded-2xl overflow-hidden">
-        {/* Accent stripe */}
-        <div className="h-1 bg-gradient-to-r from-oasis-primary via-oasis-accent to-oasis-green" />
-        <div className="px-6 py-5 flex items-center gap-4">
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-oasis-primary to-oasis-primary-light flex items-center justify-center shrink-0 shadow-sm">
-            <CheckSquare className="w-5 h-5 text-oasis-accent" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-gray-900">Tasks</h1>
-            <p className="text-sm text-gray-500 mt-0.5">
-              {tasksResult.totalDocs} task{tasksResult.totalDocs !== 1 ? 's' : ''} total
-            </p>
-          </div>
-        </div>
-      </div>
+      <TasksPageHeader
+        totalDocs={tasksResult.totalDocs}
+        projects={(projectsResult.projects as Array<{ id: string | number; name?: string }>).map(
+          (p) => ({ id: String(p.id), name: String(p.name ?? '') })
+        )}
+      />
 
       {/* Filters */}
       <div className="glass-card rounded-2xl p-5">

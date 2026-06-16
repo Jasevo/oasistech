@@ -11,18 +11,24 @@ import { RecentTasksHeader } from '@/components/RecentTasksHeader'
 import { VisitorStrip } from '@/components/VisitorStrip'
 import { TeamActivityCard } from '@/components/TeamActivityCard'
 import { fetchTaskStats, fetchRecentTasks, fetchUpcomingDeadlines, fetchTopPriorityTasks } from '@/lib/tasks'
+import { fetchProjects } from '@/lib/projects'
 import { fetchVisitStats } from '@/lib/visits'
 
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
-  const [stats, recent, deadlines, topPriority, visitStats] = await Promise.all([
+  const [stats, recent, deadlines, topPriority, visitStats, projectsResult] = await Promise.all([
     fetchTaskStats(),
     fetchRecentTasks(5),
     fetchUpcomingDeadlines(4),
     fetchTopPriorityTasks(3),
     fetchVisitStats(),
+    fetchProjects({ status: 'active' }),
   ])
+
+  const projects = (projectsResult.projects as Array<{ id: string | number; name?: string }>).map(
+    (p) => ({ id: String(p.id), name: String(p.name ?? '') })
+  )
 
   const userName = process.env.DASHBOARD_USER_NAME || 'Admin'
   const hasTasks = stats.total > 0
@@ -73,7 +79,7 @@ export default async function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <QuickActions />
+            <QuickActions projects={projects} />
             <TopPriorities
               tasks={topPriority.tasks as Array<{ id: string; title: string; status: string; priority?: string }>}
             />
@@ -83,7 +89,7 @@ export default async function DashboardPage() {
       ) : (
         <>
           <WelcomeSection />
-          <QuickActions />
+          <QuickActions projects={projects} />
         </>
       )}
     </div>
