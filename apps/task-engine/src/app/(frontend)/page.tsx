@@ -43,8 +43,6 @@ export default async function DashboardPage() {
     <div className="space-y-5 lg:space-y-6">
       <Greeting name={userName} />
 
-      <DashboardAIWidget />
-
       <StatsCards
         total={stats.total}
         todo={stats.todo}
@@ -59,6 +57,8 @@ export default async function DashboardPage() {
         desktop={visitStats.devices.desktop}
         mobile={visitStats.devices.mobile + visitStats.devices.tablet}
       />
+
+      <DashboardAIWidget />
 
       {hasTasks ? (
         <>
