@@ -1,6 +1,8 @@
 import { SettingsPanel } from '@/components/SettingsPanel'
 import { Settings } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: 'Settings | OasisTech',
 }
