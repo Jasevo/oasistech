@@ -17,7 +17,7 @@ export function VisitorStrip({ today, thisWeek, total, desktop, mobile }: Visito
   const devicePct = desktop + mobile > 0 ? Math.round((desktop / (desktop + mobile)) * 100) : 0
 
   return (
-    <div className="glass-card rounded-2xl px-5 py-4 flex flex-wrap items-center gap-x-6 gap-y-3">
+    <div className="glass-card glass-card-accented rounded-2xl px-5 py-4 flex flex-wrap items-center gap-x-6 gap-y-3">
       <div className="flex items-center gap-2 shrink-0">
         <div className="w-7 h-7 rounded-lg bg-oasis-primary/10 flex items-center justify-center">
           <Users className="w-3.5 h-3.5 text-oasis-primary" />

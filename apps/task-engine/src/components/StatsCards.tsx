@@ -29,6 +29,11 @@ function StatCard({ label, value, icon: Icon, index, gradient, textLight = true,
       <div className="absolute -right-4 -top-4 w-24 h-24 rounded-full bg-white/10" />
       <div className="absolute -right-2 -bottom-6 w-20 h-20 rounded-full bg-white/5" />
 
+      {/* Subtle top-left darkening keeps overlaid text legible across the gradient */}
+      {textLight && (
+        <div className="absolute inset-0 bg-gradient-to-br from-black/15 via-transparent to-transparent" />
+      )}
+
       <div className="relative z-10">
         <div className="flex items-start justify-between">
           <p className={`text-xs font-semibold uppercase tracking-wider ${textLight ? 'text-white/80' : 'text-gray-700/80'}`}>

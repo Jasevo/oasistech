@@ -6,7 +6,7 @@
   :root {
     --oasis-primary: #092421;
     --oasis-accent: #e3ba54;
-    --oasis-bg: #EFF6FF;
+    --oasis-bg: #f5f1ea;
     --oasis-sand: #d4c5a9;
     --oasis-cream: #faf6ef;
     --oasis-green: #1a5c47;
@@ -51,23 +51,30 @@
   }
 
   .glass-card {
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(250, 246, 239, 0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(212, 197, 169, 0.25);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   }
 
+  /* Thin gold top-accent for cards that have no coloured header strip */
+  .glass-card-accented {
+    border-top: 3px solid var(--oasis-accent);
+  }
+
+  /* Cohesive on-brand palette: palm green, desert gold, oasis-water teal.
+     Stops stay mid-tone (not near-white) so overlaid text keeps AA contrast. */
   .stat-gradient-1 {
-    background: linear-gradient(135deg, #0d3530 0%, #1a6b52 50%, #43c6a4 100%);
+    background: linear-gradient(135deg, #0d3530 0%, #1a6b52 55%, #2d8f6f 100%);
   }
   .stat-gradient-2 {
-    background: linear-gradient(135deg, #e3ba54 0%, #f0d078 50%, #fcebb8 100%);
+    background: linear-gradient(135deg, #b88a1e 0%, #e3ba54 55%, #efce82 100%);
   }
   .stat-gradient-3 {
-    background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #ddd6fe 100%);
+    background: linear-gradient(135deg, #0e5a63 0%, #0f8a9c 55%, #2bb6c4 100%);
   }
   .stat-gradient-4 {
-    background: linear-gradient(135deg, #059669 0%, #34d399 50%, #a7f3d0 100%);
+    background: linear-gradient(135deg, #0a7d4f 0%, #10b981 55%, #34d399 100%);
   }
 }
