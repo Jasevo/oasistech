@@ -2,18 +2,17 @@
 
 import { useState, useEffect, useTransition } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Plus, Loader2, Calendar, FolderKanban, ChevronDown } from 'lucide-react'
+import { X, Plus, Loader2, Calendar, FolderKanban, ChevronDown, User } from 'lucide-react'
 import { createTask, type TaskPriority, type TaskStatus } from '@/actions/tasks'
 
-interface Project {
-  id: string
-  name: string
-}
+interface Project { id: string; name: string }
+interface UserOption { id: string; displayName?: string | null; email: string }
 
 interface CreateTaskDrawerProps {
   isOpen: boolean
   onClose: () => void
   projects: Project[]
+  users?: UserOption[]
   defaultProjectId?: string
 }
 
@@ -30,7 +29,7 @@ const PRIORITY_OPTIONS: { value: TaskPriority; label: string; dot: string }[] = 
   { value: 'urgent', label: 'Urgent', dot: 'bg-red-500' },
 ]
 
-export function CreateTaskDrawer({ isOpen, onClose, projects, defaultProjectId }: CreateTaskDrawerProps) {
+export function CreateTaskDrawer({ isOpen, onClose, projects, users = [], defaultProjectId }: CreateTaskDrawerProps) {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -41,6 +40,7 @@ export function CreateTaskDrawer({ isOpen, onClose, projects, defaultProjectId }
   const [priority, setPriority] = useState<TaskPriority>('medium')
   const [dueDate, setDueDate] = useState('')
   const [projectId, setProjectId] = useState(defaultProjectId ?? '')
+  const [assigneeId, setAssigneeId] = useState('')
 
   // Reset form when drawer opens
   useEffect(() => {
@@ -51,6 +51,7 @@ export function CreateTaskDrawer({ isOpen, onClose, projects, defaultProjectId }
       setPriority('medium')
       setDueDate('')
       setProjectId(defaultProjectId ?? '')
+      setAssigneeId('')
       setError(null)
       setSuccess(false)
     }
@@ -78,6 +79,7 @@ export function CreateTaskDrawer({ isOpen, onClose, projects, defaultProjectId }
         priority,
         dueDate: dueDate || undefined,
         project: projectId || undefined,
+        assignee: assigneeId || undefined,
       })
       if (result.error) {
         setError(result.error)
@@ -238,6 +240,32 @@ export function CreateTaskDrawer({ isOpen, onClose, projects, defaultProjectId }
                         <option value="">No project</option>
                         {projects.map((p) => (
                           <option key={p.id} value={p.id}>{p.name}</option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Assignee */}
+                {users.length > 0 && (
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                      <span className="flex items-center gap-1.5">
+                        <User className="w-3.5 h-3.5" /> Assign To
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={assigneeId}
+                        onChange={(e) => setAssigneeId(e.target.value)}
+                        className="w-full appearance-none px-3.5 py-2.5 pr-8 rounded-xl border border-gray-200 text-sm font-medium text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-oasis-primary/30 focus:border-oasis-primary transition-all cursor-pointer"
+                      >
+                        <option value="">Unassigned</option>
+                        {users.map((u) => (
+                          <option key={u.id} value={u.id}>
+                            {u.displayName || u.email}
+                          </option>
                         ))}
                       </select>
                       <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />

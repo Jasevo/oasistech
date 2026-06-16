@@ -7,9 +7,10 @@ import { CreateTaskDrawer } from './drawers/CreateTaskDrawer'
 interface TasksPageHeaderProps {
   totalDocs: number
   projects: Array<{ id: string; name: string }>
+  users?: Array<{ id: string; displayName?: string | null; email: string }>
 }
 
-export function TasksPageHeader({ totalDocs, projects }: TasksPageHeaderProps) {
+export function TasksPageHeader({ totalDocs, projects, users = [] }: TasksPageHeaderProps) {
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   return (
@@ -40,6 +41,7 @@ export function TasksPageHeader({ totalDocs, projects }: TasksPageHeaderProps) {
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         projects={projects}
+        users={users}
       />
     </>
   )

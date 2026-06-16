@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useTransition } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import {
@@ -16,14 +16,27 @@ import {
   RefreshCw,
   Pencil,
   Trash2,
+  User,
+  MessageSquare,
+  Send,
+  Link2,
 } from 'lucide-react'
 import { deleteTask } from '@/actions/tasks'
+import { createComment, deleteComment, fetchTaskComments } from '@/actions/comments'
 import { EditTaskDrawer } from './drawers/EditTaskDrawer'
 import { DeleteConfirmDialog } from './drawers/DeleteConfirmDialog'
 
 interface Project {
   id: string
   name: string
+}
+
+interface Comment {
+  id: string
+  body: string
+  createdAt: string
+  author?: { id: string; displayName?: string | null; email: string } | null
+  mentionedTask?: { id: string; title: string } | null
 }
 
 interface Task {
@@ -36,13 +49,20 @@ interface Task {
   createdAt: string
   updatedAt: string
   project?: { id: string; name: string } | string | null
+  assignee?: { id: string; displayName?: string | null; email: string } | string | null
 }
+
+interface UserOption { id: string; displayName?: string | null; email: string }
 
 interface TaskDetailViewProps {
   task: Task
   projectName: string | null
   projectId: string | null
   projects: Project[]
+  users?: UserOption[]
+  currentUserId: string
+  initialComments: Comment[]
+  allTasks: Array<{ id: string; title: string }>
 }
 
 const statusConfig = {
@@ -122,10 +142,17 @@ function ProgressBar({ status }: { status: string }) {
   )
 }
 
-export function TaskDetailView({ task, projectName, projectId, projects }: TaskDetailViewProps) {
+export function TaskDetailView({ task, projectName, projectId, projects, users = [], currentUserId, initialComments, allTasks }: TaskDetailViewProps) {
   const [mounted, setMounted] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+
+  // Comments state
+  const [comments, setComments] = useState<Comment[]>(initialComments)
+  const [commentBody, setCommentBody] = useState('')
+  const [mentionedTaskId, setMentionedTaskId] = useState('')
+  const [commentPending, startCommentTransition] = useTransition()
+  const [commentError, setCommentError] = useState<string | null>(null)
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -146,6 +173,48 @@ export function TaskDetailView({ task, projectName, projectId, projects }: TaskD
   })
 
   const handleDelete = useCallback(() => deleteTask(task.id), [task.id])
+
+  const assignee =
+    task.assignee && typeof task.assignee === 'object' ? task.assignee : null
+
+  function handleCommentSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!commentBody.trim()) return
+    setCommentError(null)
+    startCommentTransition(async () => {
+      const result = await createComment({
+        taskId: task.id,
+        authorId: currentUserId,
+        body: commentBody,
+        mentionedTaskId: mentionedTaskId || undefined,
+      })
+      if (result.error) {
+        setCommentError(result.error)
+      } else if (result.comment) {
+        const newComment: Comment = {
+          id: String(result.comment.id),
+          body: commentBody,
+          createdAt: result.comment.createdAt,
+          author: null,
+          mentionedTask: mentionedTaskId
+            ? allTasks.find(t => t.id === mentionedTaskId) ?? null
+            : null,
+        }
+        setComments(prev => [...prev, newComment])
+        setCommentBody('')
+        setMentionedTaskId('')
+      }
+    })
+  }
+
+  function handleDeleteComment(commentId: string) {
+    startCommentTransition(async () => {
+      const result = await deleteComment(commentId, task.id)
+      if (!result.error) {
+        setComments(prev => prev.filter(c => c.id !== commentId))
+      }
+    })
+  }
 
   return (
     <>
@@ -224,6 +293,114 @@ export function TaskDetailView({ task, projectName, projectId, projects }: TaskD
               <Trash2 className="w-4 h-4" /> Delete
             </button>
           </motion.div>
+
+          {/* ── Comments ── */}
+          <motion.div {...fadeUp(0.3)} className="glass-card rounded-2xl overflow-hidden">
+            <div className="bg-gradient-to-r from-oasis-primary to-oasis-primary-light px-6 py-4 flex items-center gap-3">
+              <MessageSquare className="w-4 h-4 text-white/70" />
+              <h2 className="text-sm font-bold text-white/80 uppercase tracking-widest">
+                Comments
+              </h2>
+              <span className="text-xs font-semibold text-white/60 bg-white/10 px-2.5 py-1 rounded-full ml-auto">
+                {comments.length}
+              </span>
+            </div>
+
+            <div className="p-5 space-y-4">
+              {/* Existing comments */}
+              {comments.length === 0 && (
+                <p className="text-sm text-gray-400 text-center py-4">No comments yet. Be the first to add one.</p>
+              )}
+              {comments.map((c) => {
+                const authorName = c.author?.displayName || c.author?.email || 'User'
+                const initial = authorName.charAt(0).toUpperCase()
+                const timeAgo = (() => {
+                  const diff = Date.now() - new Date(c.createdAt).getTime()
+                  const m = Math.floor(diff / 60000)
+                  if (m < 1) return 'Just now'
+                  if (m < 60) return `${m}m ago`
+                  const h = Math.floor(m / 60)
+                  if (h < 24) return `${h}h ago`
+                  return new Date(c.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                })()
+
+                return (
+                  <div key={c.id} className="flex gap-3 group">
+                    <div className="w-8 h-8 rounded-full bg-oasis-primary flex items-center justify-center shrink-0 text-xs font-bold text-oasis-accent">
+                      {initial}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-bold text-gray-800">{authorName}</span>
+                        <span className="text-[11px] text-gray-400">{timeAgo}</span>
+                        <button
+                          onClick={() => handleDeleteComment(c.id)}
+                          className="ml-auto text-[11px] text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{c.body}</p>
+                      {c.mentionedTask && (
+                        <Link
+                          href={`/tasks/${c.mentionedTask.id}`}
+                          className="inline-flex items-center gap-1.5 mt-2 text-xs font-semibold text-oasis-primary bg-oasis-primary/5 px-2.5 py-1 rounded-lg hover:bg-oasis-primary/10 transition-colors"
+                        >
+                          <Link2 className="w-3 h-3" />
+                          {c.mentionedTask.title}
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+
+              {/* Add comment form */}
+              <form onSubmit={handleCommentSubmit} className="pt-3 border-t border-gray-100 space-y-3">
+                <textarea
+                  value={commentBody}
+                  onChange={(e) => setCommentBody(e.target.value)}
+                  placeholder="Add a comment..."
+                  rows={2}
+                  maxLength={2000}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-oasis-primary/30 focus:border-oasis-primary transition-all resize-none"
+                />
+
+                {/* Link a task */}
+                {allTasks.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <Link2 className="w-4 h-4 text-gray-400 shrink-0" />
+                    <select
+                      value={mentionedTaskId}
+                      onChange={(e) => setMentionedTaskId(e.target.value)}
+                      className="flex-1 text-xs px-2.5 py-1.5 rounded-lg border border-gray-200 text-gray-600 bg-white focus:outline-none focus:ring-1 focus:ring-oasis-primary/30"
+                    >
+                      <option value="">Link a task (optional)</option>
+                      {allTasks.filter(t => t.id !== task.id).map(t => (
+                        <option key={t.id} value={t.id}>{t.title}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                {commentError && (
+                  <p className="text-xs text-red-600 font-medium">{commentError}</p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={commentPending || !commentBody.trim()}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-oasis-primary text-white hover:bg-oasis-primary-light disabled:opacity-50 transition-all"
+                >
+                  {commentPending
+                    ? <Loader2 className="w-4 h-4 animate-spin" />
+                    : <Send className="w-4 h-4" />
+                  }
+                  {commentPending ? 'Posting...' : 'Post Comment'}
+                </button>
+              </form>
+            </div>
+          </motion.div>
         </div>
 
         {/* ── Right column (details) ── */}
@@ -280,6 +457,24 @@ export function TaskDetailView({ task, projectName, projectId, projects }: TaskD
                           ? 'Due tomorrow'
                           : `${daysUntilDue} days left`}
                       </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Assignee */}
+              {assignee && (
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                    <User className="w-4 h-4 text-indigo-500" />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Assigned To</p>
+                    <p className="text-sm font-semibold text-indigo-700">
+                      {assignee.displayName || assignee.email}
+                    </p>
+                    {assignee.displayName && (
+                      <p className="text-[11px] text-gray-400 mt-0.5">{assignee.email}</p>
                     )}
                   </div>
                 </div>
@@ -355,6 +550,7 @@ export function TaskDetailView({ task, projectName, projectId, projects }: TaskD
         onClose={() => setEditOpen(false)}
         task={task}
         projects={projects}
+        users={users}
       />
       <DeleteConfirmDialog
         isOpen={deleteOpen}

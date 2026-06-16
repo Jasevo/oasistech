@@ -7,15 +7,16 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, CheckSquare, FolderKanban, Users,
   BarChart3, Activity, Eye, Settings,
-  ChevronLeft, ChevronRight, ShieldCheck,
+  ChevronLeft, ChevronRight, ShieldCheck, Inbox,
 } from 'lucide-react'
 import { useLanguage } from '@/context/LanguageContext'
 
 interface SidebarProps {
   taskCount?: number
+  unreadCount?: number
 }
 
-export function Sidebar({ taskCount }: SidebarProps) {
+export function Sidebar({ taskCount, unreadCount }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false)
   const pathname = usePathname()
   const { t } = useLanguage()
@@ -24,6 +25,7 @@ export function Sidebar({ taskCount }: SidebarProps) {
     { href: '/',          labelKey: 'dashboard', icon: LayoutDashboard },
     { href: '/tasks',     labelKey: 'tasks',     icon: CheckSquare },
     { href: '/projects',  labelKey: 'projects',  icon: FolderKanban },
+    { href: '/inbox',     labelKey: 'inbox',     icon: Inbox },
     { href: '/users',     labelKey: 'users',     icon: Users },
     { href: '/analytics', labelKey: 'analytics', icon: BarChart3 },
     { href: '/activity',  labelKey: 'activity',  icon: Activity },
@@ -78,6 +80,11 @@ export function Sidebar({ taskCount }: SidebarProps) {
               {item.href === '/tasks' && taskCount !== undefined && taskCount > 0 && !collapsed && (
                 <span className="ml-auto text-[11px] bg-oasis-accent text-oasis-primary font-bold rounded-full px-2 py-0.5 min-w-[22px] text-center">
                   {taskCount}
+                </span>
+              )}
+              {item.href === '/inbox' && unreadCount !== undefined && unreadCount > 0 && (
+                <span className={`${collapsed ? 'absolute top-1.5 right-1.5' : 'ml-auto'} text-[11px] bg-red-500 text-white font-bold rounded-full px-2 py-0.5 min-w-[22px] text-center`}>
+                  {unreadCount > 99 ? '99+' : unreadCount}
                 </span>
               )}
               {active && (

@@ -13,6 +13,7 @@ export interface CreateTaskInput {
   priority?: TaskPriority
   dueDate?: string
   project?: string
+  assignee?: string
 }
 
 export interface UpdateTaskInput {
@@ -22,6 +23,7 @@ export interface UpdateTaskInput {
   priority?: TaskPriority
   dueDate?: string | null
   project?: string | null
+  assignee?: string | null
 }
 
 export async function createTask(input: CreateTaskInput) {
@@ -36,6 +38,7 @@ export async function createTask(input: CreateTaskInput) {
         priority: input.priority ?? 'medium',
         dueDate: input.dueDate || undefined,
         project: input.project || undefined,
+        assignee: input.assignee || undefined,
       },
       overrideAccess: true,
     })
@@ -59,6 +62,7 @@ export async function updateTask(id: string, input: UpdateTaskInput) {
     if (input.priority !== undefined) data.priority = input.priority
     if ('dueDate' in input) data.dueDate = input.dueDate || null
     if ('project' in input) data.project = input.project || null
+    if ('assignee' in input) data.assignee = input.assignee || null
 
     const task = await payload.update({
       collection: 'tasks',

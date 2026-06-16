@@ -23,6 +23,7 @@ const translations: Record<string, Record<Lang, string>> = {
   settings:    { en: 'Settings',    ar: 'الإعدادات' },
   adminPanel:  { en: 'Admin Panel', ar: 'لوحة الإدارة' },
   home:        { en: 'Home',        ar: 'الرئيسية' },
+  inbox:       { en: 'Inbox',       ar: 'صندوق الوارد' },
   more:        { en: 'More',        ar: 'المزيد' },
 
   // ── Greeting ─────────────────────────────────────────────────────────────

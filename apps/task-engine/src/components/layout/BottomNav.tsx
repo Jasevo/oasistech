@@ -2,10 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, CheckSquare, FolderKanban, Eye, Settings } from 'lucide-react'
+import { LayoutDashboard, CheckSquare, FolderKanban, Inbox, Settings } from 'lucide-react'
 import { useLanguage } from '@/context/LanguageContext'
 
-export function BottomNav() {
+interface BottomNavProps {
+  unreadCount?: number
+}
+
+export function BottomNav({ unreadCount }: BottomNavProps) {
   const pathname = usePathname()
   const { t } = useLanguage()
 
@@ -13,7 +17,7 @@ export function BottomNav() {
     { href: '/',         labelKey: 'home',      icon: LayoutDashboard },
     { href: '/tasks',    labelKey: 'tasks',     icon: CheckSquare },
     { href: '/projects', labelKey: 'projects',  icon: FolderKanban },
-    { href: '/visitors', labelKey: 'visitors',  icon: Eye },
+    { href: '/inbox',    labelKey: 'inbox',     icon: Inbox },
     { href: '/settings', labelKey: 'more',      icon: Settings },
   ]
 
@@ -35,8 +39,13 @@ export function BottomNav() {
               className={`relative flex flex-col items-center justify-center gap-1 min-w-[48px] min-h-[48px] rounded-xl transition-all duration-200
                 ${active ? 'text-oasis-accent' : 'text-white/50 hover:text-white/80'}`}
             >
-              <div className={`p-1.5 rounded-xl transition-all duration-200 ${active ? 'bg-oasis-accent/15' : ''}`}>
+              <div className={`relative p-1.5 rounded-xl transition-all duration-200 ${active ? 'bg-oasis-accent/15' : ''}`}>
                 <Icon className="w-5 h-5" />
+                {item.href === '/inbox' && unreadCount !== undefined && unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
               </div>
               <span className="text-[10px] font-medium">{t(item.labelKey)}</span>
               {active && <div className="absolute -top-0 w-8 h-0.5 rounded-full bg-oasis-accent" />}

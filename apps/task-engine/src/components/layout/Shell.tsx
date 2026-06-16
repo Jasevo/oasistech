@@ -13,9 +13,10 @@ interface ShellProps {
   children: React.ReactNode
   userName?: string
   openTaskCount?: number
+  unreadCount?: number
 }
 
-export function Shell({ children, userName, openTaskCount }: ShellProps) {
+export function Shell({ children, userName, openTaskCount, unreadCount }: ShellProps) {
   return (
     <LanguageProvider>
       <AIProvider>
@@ -42,14 +43,14 @@ export function Shell({ children, userName, openTaskCount }: ShellProps) {
           <div className="relative z-10">
             <TopBar userName={userName} />
             <div className="flex h-[calc(100vh-56px)]">
-              <Sidebar taskCount={openTaskCount} />
+              <Sidebar taskCount={openTaskCount} unreadCount={unreadCount} />
               <main className="flex-1 overflow-y-auto scrollbar-thin pb-20 md:pb-0">
                 <div className="p-4 lg:px-8 lg:py-6">
                   {children}
                 </div>
               </main>
             </div>
-            <BottomNav />
+            <BottomNav unreadCount={unreadCount} />
           </div>
 
           {/* Page visit tracker */}

@@ -2,13 +2,11 @@
 
 import { useState, useEffect, useTransition } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Pencil, Loader2, Calendar, FolderKanban, ChevronDown, Save } from 'lucide-react'
+import { X, Pencil, Loader2, Calendar, FolderKanban, ChevronDown, Save, User } from 'lucide-react'
 import { updateTask, type TaskPriority, type TaskStatus } from '@/actions/tasks'
 
-interface Project {
-  id: string
-  name: string
-}
+interface Project { id: string; name: string }
+interface UserOption { id: string; displayName?: string | null; email: string }
 
 interface EditTaskDrawerProps {
   isOpen: boolean
@@ -21,8 +19,10 @@ interface EditTaskDrawerProps {
     priority: string
     dueDate?: string | null
     project?: { id: string; name: string } | string | null
+    assignee?: { id: string; displayName?: string | null; email: string } | string | null
   }
   projects: Project[]
+  users?: UserOption[]
 }
 
 const STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
@@ -45,13 +45,15 @@ function toDateInputValue(dateStr: string | null | undefined): string {
   return d.toISOString().split('T')[0]
 }
 
-export function EditTaskDrawer({ isOpen, onClose, task, projects }: EditTaskDrawerProps) {
+export function EditTaskDrawer({ isOpen, onClose, task, projects, users = [] }: EditTaskDrawerProps) {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
   const currentProjectId =
     task.project && typeof task.project === 'object' ? task.project.id : (task.project as string) ?? ''
+  const currentAssigneeId =
+    task.assignee && typeof task.assignee === 'object' ? task.assignee.id : (task.assignee as string) ?? ''
 
   const [title, setTitle] = useState(task.title)
   const [description, setDescription] = useState(task.description ?? '')
@@ -59,6 +61,7 @@ export function EditTaskDrawer({ isOpen, onClose, task, projects }: EditTaskDraw
   const [priority, setPriority] = useState<TaskPriority>(task.priority as TaskPriority)
   const [dueDate, setDueDate] = useState(toDateInputValue(task.dueDate))
   const [projectId, setProjectId] = useState(currentProjectId)
+  const [assigneeId, setAssigneeId] = useState(currentAssigneeId)
 
   // Sync fields if task prop changes
   useEffect(() => {
@@ -72,6 +75,11 @@ export function EditTaskDrawer({ isOpen, onClose, task, projects }: EditTaskDraw
         task.project && typeof task.project === 'object'
           ? task.project.id
           : (task.project as string) ?? ''
+      )
+      setAssigneeId(
+        task.assignee && typeof task.assignee === 'object'
+          ? task.assignee.id
+          : (task.assignee as string) ?? ''
       )
       setError(null)
       setSuccess(false)
@@ -99,6 +107,7 @@ export function EditTaskDrawer({ isOpen, onClose, task, projects }: EditTaskDraw
         priority,
         dueDate: dueDate || null,
         project: projectId || null,
+        assignee: assigneeId || null,
       })
       if (result.error) {
         setError(result.error)
@@ -276,6 +285,32 @@ export function EditTaskDrawer({ isOpen, onClose, task, projects }: EditTaskDraw
                         <option value="">No project</option>
                         {projects.map((p) => (
                           <option key={p.id} value={p.id}>{p.name}</option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Assignee */}
+                {users.length > 0 && (
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">
+                      <span className="flex items-center gap-1.5">
+                        <User className="w-3.5 h-3.5" /> Assign To
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={assigneeId}
+                        onChange={(e) => setAssigneeId(e.target.value)}
+                        className="w-full appearance-none px-3.5 py-2.5 pr-8 rounded-xl border border-gray-200 text-sm font-medium text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-oasis-primary/30 focus:border-oasis-primary transition-all cursor-pointer"
+                      >
+                        <option value="">Unassigned</option>
+                        {users.map((u) => (
+                          <option key={u.id} value={u.id}>
+                            {u.displayName || u.email}
+                          </option>
                         ))}
                       </select>
                       <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />

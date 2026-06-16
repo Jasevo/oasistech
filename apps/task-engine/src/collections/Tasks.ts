@@ -65,6 +65,15 @@ export const Tasks: CollectionConfig = {
       relationTo: 'projects',
       hasMany: false,
     },
+    {
+      name: 'assignee',
+      type: 'relationship',
+      relationTo: 'api-users',
+      hasMany: false,
+      admin: {
+        description: 'User responsible for completing this task.',
+      },
+    },
   ],
   timestamps: true,
   hooks: {

@@ -3,7 +3,7 @@
 import { useState, useEffect, useTransition } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Calendar, AlertTriangle, Circle, Loader2, CheckCircle2, FolderKanban } from 'lucide-react'
+import { Calendar, AlertTriangle, Circle, Loader2, CheckCircle2, FolderKanban, User } from 'lucide-react'
 import { updateTaskStatus, type TaskStatus } from '@/actions/tasks'
 
 interface TaskCardProps {
@@ -15,6 +15,7 @@ interface TaskCardProps {
     priority: 'low' | 'medium' | 'high' | 'urgent'
     dueDate?: string | null
     project?: { id: string; name: string; color: string } | string | null
+    assignee?: { id: string; displayName?: string | null; email: string } | string | null
     createdAt: string
   }
   index: number
@@ -78,6 +79,12 @@ export function TaskCard({ task, index }: TaskCardProps) {
 
   const projectName =
     task.project && typeof task.project === 'object' ? task.project.name : null
+
+  const assignee =
+    task.assignee && typeof task.assignee === 'object' ? task.assignee : null
+  const assigneeInitial = assignee
+    ? (assignee.displayName || assignee.email).charAt(0).toUpperCase()
+    : null
 
   const sc = statusConfig[currentStatus] ?? statusConfig.todo
   const pc = priorityConfig[task.priority] ?? priorityConfig.medium
@@ -171,6 +178,17 @@ export function TaskCard({ task, index }: TaskCardProps) {
                       day: 'numeric',
                     })}
                     {isOverdue && <span className="font-semibold"> · Overdue</span>}
+                  </span>
+                )}
+
+                {/* Assignee avatar */}
+                {assigneeInitial && (
+                  <span
+                    title={assignee?.displayName || assignee?.email}
+                    className="inline-flex items-center gap-1 text-[11px] font-medium text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full"
+                  >
+                    <User className="w-3 h-3" />
+                    {assignee?.displayName || assignee?.email?.split('@')[0]}
                   </span>
                 )}
 

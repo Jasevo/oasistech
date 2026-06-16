@@ -9,6 +9,8 @@ import { Projects } from './src/collections/Projects'
 import { ApiUsers } from './src/collections/ApiUsers'
 import { SiteVisits } from './src/collections/SiteVisits'
 import { ActivityLogs } from './src/collections/ActivityLogs'
+import { TaskComments } from './src/collections/TaskComments'
+import { Messages } from './src/collections/Messages'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -25,7 +27,7 @@ export default buildConfig({
       beforeDashboard: ['./src/components/admin/DashboardBanner#default'],
     },
   },
-  collections: [Tasks, Projects, ApiUsers, SiteVisits, ActivityLogs],
+  collections: [Tasks, Projects, ApiUsers, SiteVisits, ActivityLogs, TaskComments, Messages],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

@@ -1,5 +1,6 @@
 import { fetchTasks } from '@/lib/tasks'
 import { fetchProjects } from '@/lib/projects'
+import { fetchUsers } from '@/lib/users'
 import { TaskList } from '@/components/TaskList'
 import { TaskFilters } from '@/components/TaskFilters'
 import { TasksPageHeader } from '@/components/TasksPageHeader'
@@ -27,7 +28,7 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
   const params = await searchParams
   const page = parseInt(params.page || '1', 10)
 
-  const [tasksResult, projectsResult] = await Promise.all([
+  const [tasksResult, projectsResult, usersResult] = await Promise.all([
     fetchTasks({
       status: params.status,
       priority: params.priority,
@@ -38,7 +39,14 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
       limit: 12,
     }),
     fetchProjects({ status: 'active' }),
+    fetchUsers(),
   ])
+
+  const userOptions = (usersResult.users as Array<{ id: string | number; displayName?: string | null; email: string }>).map((u) => ({
+    id: String(u.id),
+    displayName: u.displayName ?? null,
+    email: u.email,
+  }))
 
   const totalPages = tasksResult.totalPages
 
@@ -58,6 +66,7 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
         projects={(projectsResult.projects as Array<{ id: string | number; name?: string }>).map(
           (p) => ({ id: String(p.id), name: String(p.name ?? '') })
         )}
+        users={userOptions}
       />
 
       {/* Filters */}

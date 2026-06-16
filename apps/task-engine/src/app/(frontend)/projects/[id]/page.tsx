@@ -1,4 +1,5 @@
 import { fetchProjectById, fetchProjects } from '@/lib/projects'
+import { fetchUsers } from '@/lib/users'
 import { notFound } from 'next/navigation'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { ProjectDetailView } from '@/components/ProjectDetailView'
@@ -11,10 +12,17 @@ interface ProjectDetailPageProps {
 
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const { id } = await params
-  const [{ project, tasks, error }, { projects: allProjects }] = await Promise.all([
+  const [{ project, tasks, error }, { projects: allProjects }, { users }] = await Promise.all([
     fetchProjectById(id),
     fetchProjects({ status: 'active' }),
+    fetchUsers(),
   ])
+
+  const userOptions = (users as Array<{ id: string | number; displayName?: string | null; email: string }>).map((u) => ({
+    id: String(u.id),
+    displayName: u.displayName ?? null,
+    email: u.email,
+  }))
 
   if (error || !project) {
     notFound()
@@ -52,6 +60,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
         completedCount={completedCount}
         completionPercent={completionPercent}
         projects={projectOptions}
+        users={userOptions}
       />
     </div>
   )

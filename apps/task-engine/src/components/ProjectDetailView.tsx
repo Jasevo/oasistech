@@ -55,6 +55,7 @@ interface ProjectDetailViewProps {
   completedCount: number
   completionPercent: number
   projects: Array<{ id: string; name: string }>
+  users?: Array<{ id: string; displayName?: string | null; email: string }>
 }
 
 export function ProjectDetailView({
@@ -63,6 +64,7 @@ export function ProjectDetailView({
   completedCount,
   completionPercent,
   projects,
+  users = [],
 }: ProjectDetailViewProps) {
   const [taskDrawerOpen, setTaskDrawerOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -209,6 +211,7 @@ export function ProjectDetailView({
         isOpen={taskDrawerOpen}
         onClose={() => setTaskDrawerOpen(false)}
         projects={projects}
+        users={users}
         defaultProjectId={project.id}
       />
       <DeleteConfirmDialog
