@@ -37,7 +37,7 @@ export function UpcomingDeadlines({ tasks }: UpcomingDeadlinesProps) {
       transition={{ duration: 0.4, delay: 0.4 }}
       className="glass-card rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     >
-      <div className="bg-gradient-to-r from-violet-700 to-purple-500 p-5">
+      <div className="bg-gradient-to-r from-[#0e5a63] to-[#2bb6c4] p-5">
         <div className="flex items-center gap-2">
           <CalendarDays className="w-4 h-4 text-white/80" />
           <h2 className="text-sm font-bold text-white uppercase tracking-wider">{t('upcomingDeadlines')}</h2>

@@ -32,7 +32,7 @@ const ACTION_ICON: Record<string, React.ElementType> = {
 }
 
 const ACTION_COLOR: Record<string, string> = {
-  'created a task':   'from-blue-400 to-blue-600',
+  'created a task':   'from-[#0f8a9c] to-[#0e5a63]',
   'completed a task': 'from-emerald-400 to-emerald-600',
   'updated a task':   'from-oasis-accent to-amber-500',
 }

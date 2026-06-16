@@ -51,11 +51,16 @@
   }
 
   .glass-card {
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(250, 246, 239, 0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(212, 197, 169, 0.25);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Thin gold top-accent for cards that have no coloured header strip */
+  .glass-card-accented {
+    border-top: 3px solid var(--oasis-accent);
   }
 
   /* Cohesive on-brand palette: palm green, desert gold, oasis-water teal.

@@ -63,7 +63,7 @@ export default async function DashboardPage() {
       {hasTasks ? (
         <>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <section className="lg:col-span-2 glass-card rounded-2xl p-6 hover:shadow-lg transition-all duration-300">
+            <section className="lg:col-span-2 glass-card glass-card-accented rounded-2xl p-6 hover:shadow-lg transition-all duration-300">
               <RecentTasksHeader />
               <TaskList
                 tasks={recent.tasks as never[]}

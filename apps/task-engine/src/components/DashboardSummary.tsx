@@ -42,9 +42,9 @@ export function DashboardSummary({ total, completed, inProgress }: DashboardSumm
       label: t('inProgressTasks'),
       value: String(inProgress),
       percent: inProgressPct,
-      color: 'bg-blue-500',
-      iconColor: 'text-blue-600',
-      iconBg: 'bg-blue-50',
+      color: 'bg-[#0f8a9c]',
+      iconColor: 'text-[#0e5a63]',
+      iconBg: 'bg-[#e0f6f9]',
     },
   ]
 
@@ -53,7 +53,7 @@ export function DashboardSummary({ total, completed, inProgress }: DashboardSumm
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.3 }}
-      className="glass-card rounded-2xl p-6 hover:shadow-lg transition-all duration-300"
+      className="glass-card glass-card-accented rounded-2xl p-6 hover:shadow-lg transition-all duration-300"
     >
       <h2 className="text-base font-bold text-gray-900 mb-6">{t('progressOverview')}</h2>
       <div className="flex flex-col sm:flex-row items-center gap-8">
