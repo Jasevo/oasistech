@@ -72,10 +72,21 @@ export function InboxView({
   const [sent, setSent] = useState<Message[]>(initialSent)
   const [selected, setSelected] = useState<Message | null>(null)
   const [composeOpen, setComposeOpen] = useState(false)
+  const [replyTo, setReplyTo] = useState<Message | null>(null)
   const [isPending, startTransition] = useTransition()
 
   const messages = tab === 'received' ? received : sent
   const unreadCount = received.filter((m) => !m.read).length
+
+  function openCompose() {
+    setReplyTo(null)
+    setComposeOpen(true)
+  }
+
+  function openReply(msg: Message) {
+    setReplyTo(msg)
+    setComposeOpen(true)
+  }
 
   function openMessage(msg: Message) {
     setSelected(msg)
@@ -118,7 +129,7 @@ export function InboxView({
               </p>
             </div>
             <button
-              onClick={() => setComposeOpen(true)}
+              onClick={openCompose}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-oasis-primary text-white hover:bg-oasis-primary-light shadow-sm hover:shadow-md transition-all"
             >
               <Pencil className="w-4 h-4" />
@@ -316,10 +327,7 @@ export function InboxView({
                   {/* Reply / Mark read actions */}
                   <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/60 flex items-center gap-3">
                     <button
-                      onClick={() => {
-                        setSelected(null)
-                        setComposeOpen(true)
-                      }}
+                      onClick={() => openReply(selected)}
                       className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-oasis-primary text-white hover:bg-oasis-primary-light transition-all shadow-sm"
                     >
                       <Send className="w-4 h-4" /> Reply
@@ -353,7 +361,7 @@ export function InboxView({
                     Choose a message from the list to read it, or compose a new one.
                   </p>
                   <button
-                    onClick={() => setComposeOpen(true)}
+                    onClick={openCompose}
                     className="mt-6 flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-oasis-primary text-white hover:bg-oasis-primary-light shadow-sm transition-all"
                   >
                     <Pencil className="w-4 h-4" /> Compose Message
@@ -372,8 +380,18 @@ export function InboxView({
         users={users}
         tasks={tasks}
         projects={projects}
-        defaultToId={selected && tab === 'received' ? String(selected.from?.id ?? '') : ''}
-        defaultSubject={selected && tab === 'received' ? `Re: ${selected.subject}` : ''}
+        defaultToId={
+          replyTo
+            ? String(
+                (String(replyTo.from?.id) === currentUserId ? replyTo.to?.id : replyTo.from?.id) ?? ''
+              )
+            : ''
+        }
+        defaultSubject={
+          replyTo
+            ? replyTo.subject.startsWith('Re:') ? replyTo.subject : `Re: ${replyTo.subject}`
+            : ''
+        }
       />
     </>
   )

@@ -12,22 +12,28 @@ import { VisitorStrip } from '@/components/VisitorStrip'
 import { TeamActivityCard } from '@/components/TeamActivityCard'
 import { fetchTaskStats, fetchRecentTasks, fetchUpcomingDeadlines, fetchTopPriorityTasks } from '@/lib/tasks'
 import { fetchProjects } from '@/lib/projects'
+import { fetchUsers } from '@/lib/users'
 import { fetchVisitStats } from '@/lib/visits'
 
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
-  const [stats, recent, deadlines, topPriority, visitStats, projectsResult] = await Promise.all([
+  const [stats, recent, deadlines, topPriority, visitStats, projectsResult, usersResult] = await Promise.all([
     fetchTaskStats(),
     fetchRecentTasks(5),
     fetchUpcomingDeadlines(4),
     fetchTopPriorityTasks(3),
     fetchVisitStats(),
     fetchProjects({ status: 'active' }),
+    fetchUsers(),
   ])
 
   const projects = (projectsResult.projects as Array<{ id: string | number; name?: string }>).map(
     (p) => ({ id: String(p.id), name: String(p.name ?? '') })
+  )
+
+  const users = (usersResult.users as Array<{ id: string | number; displayName?: string | null; email: string }>).map(
+    (u) => ({ id: String(u.id), displayName: u.displayName ?? null, email: u.email })
   )
 
   const userName = process.env.DASHBOARD_USER_NAME || 'Admin'
@@ -79,7 +85,7 @@ export default async function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <QuickActions projects={projects} />
+            <QuickActions projects={projects} users={users} />
             <TopPriorities
               tasks={topPriority.tasks as Array<{ id: string; title: string; status: string; priority?: string }>}
             />
@@ -89,7 +95,7 @@ export default async function DashboardPage() {
       ) : (
         <>
           <WelcomeSection />
-          <QuickActions projects={projects} />
+          <QuickActions projects={projects} users={users} />
         </>
       )}
     </div>

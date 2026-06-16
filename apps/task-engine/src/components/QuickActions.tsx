@@ -10,9 +10,10 @@ import { CreateProjectDrawer } from './drawers/CreateProjectDrawer'
 
 interface QuickActionsProps {
   projects?: Array<{ id: string; name: string }>
+  users?: Array<{ id: string; displayName?: string | null; email: string }>
 }
 
-export function QuickActions({ projects = [] }: QuickActionsProps) {
+export function QuickActions({ projects = [], users = [] }: QuickActionsProps) {
   const { t } = useLanguage()
   const [taskDrawerOpen, setTaskDrawerOpen] = useState(false)
   const [projectDrawerOpen, setProjectDrawerOpen] = useState(false)
@@ -84,6 +85,7 @@ export function QuickActions({ projects = [] }: QuickActionsProps) {
         isOpen={taskDrawerOpen}
         onClose={() => setTaskDrawerOpen(false)}
         projects={projects}
+        users={users}
       />
       <CreateProjectDrawer
         isOpen={projectDrawerOpen}

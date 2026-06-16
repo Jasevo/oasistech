@@ -191,11 +191,14 @@ export function TaskDetailView({ task, projectName, projectId, projects, users =
       if (result.error) {
         setCommentError(result.error)
       } else if (result.comment) {
+        const self = users.find(u => u.id === currentUserId)
         const newComment: Comment = {
           id: String(result.comment.id),
           body: commentBody,
           createdAt: result.comment.createdAt,
-          author: null,
+          author: self
+            ? { id: self.id, displayName: self.displayName ?? null, email: self.email }
+            : null,
           mentionedTask: mentionedTaskId
             ? allTasks.find(t => t.id === mentionedTaskId) ?? null
             : null,
