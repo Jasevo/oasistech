@@ -14,10 +14,13 @@ OasisTech/
 │   ├── task-engine/          # Next.js 15 + PayloadCMS 3 (Part 2 + Bonus)
 │   │   ├── src/
 │   │   │   ├── app/
-│   │   │   │   ├── (frontend)/   # Dashboard pages (7 pages + 2 detail views)
+│   │   │   │   ├── (frontend)/   # Dashboard pages (9 pages + 2 detail views)
 │   │   │   │   └── (payload)/    # Payload admin panel + REST API
-│   │   │   ├── collections/      # Tasks, Projects, ApiUsers
-│   │   │   ├── components/       # UI components, charts, layout
+│   │   │   ├── actions/          # Server actions (task + project CRUD)
+│   │   │   ├── collections/      # Tasks, Projects, ApiUsers, SiteVisits
+│   │   │   ├── components/       # UI components, charts, drawers, layout
+│   │   │   ├── hooks/            # logActivity hook
+│   │   │   ├── context/          # AI context, Language context
 │   │   │   └── lib/              # Server-side data fetching (Local API)
 │   │   ├── payload.config.ts
 │   │   ├── Dockerfile
@@ -44,6 +47,7 @@ OasisTech/
 | Styling | Tailwind CSS 3 + Framer Motion 11 |
 | Charts | Recharts 2 |
 | Icons | Lucide React |
+| Intelligent Assistant | Oasis AI — streaming chat + live insights |
 | SPFx | SharePoint Framework 1.22, React 17, Fluent UI v8 |
 | Deployment | Docker + Dokploy |
 
@@ -82,13 +86,13 @@ apps/executive-inbox/
 │       └── IExecutiveInboxProps.ts     # Component props
 ```
 
-> **Note**: This web part requires deployment to an M365 tenant with SharePoint admin approval of Graph permissions. The code is structurally complete and follows SPFx 1.22 conventions.
+> **Note**: This web part requires deployment to an M365 tenant for runtime testing. The code is structurally complete and follows SPFx 1.22 conventions.
 
 ---
 
 ## Part 2: Secure Task Engine
 
-A full-stack task management system with PayloadCMS backend, REST API with API key authentication, and a server-rendered dashboard.
+A full-stack task management system with PayloadCMS backend, REST API with API key authentication, and a server-rendered dashboard with full inline CRUD capabilities.
 
 ### Collections
 
@@ -97,6 +101,7 @@ A full-stack task management system with PayloadCMS backend, REST API with API k
 | **Tasks** | title, status (todo/in-progress/completed), priority (low/medium/high/urgent), description, dueDate, project (relation) | Core task data |
 | **Projects** | name, description, status (active/archived), color (8 options) | Task grouping |
 | **ApiUsers** | email, password, role (admin/api-consumer), displayName, API key | Authentication |
+| **SiteVisits** | page, ipAddress, country, city, browser, os, device, referrer | Visitor analytics |
 
 ### Access Control
 All collections enforce authentication on every operation:
@@ -116,40 +121,84 @@ External consumers authenticate using the HTTP header:
 Authorization: api-users API-Key <your-api-key>
 ```
 
+### Server Actions (Dashboard Mutations)
+Dashboard mutations use Next.js Server Actions backed by the Payload Local API — no HTTP round-trip, no API key exposed to the browser:
+
+```
+src/actions/
+├── tasks.ts      # createTask, updateTask, updateTaskStatus, deleteTask
+└── projects.ts   # createProject, updateProject, deleteProject
+```
+
+All actions call `revalidatePath()` after mutation so the relevant pages refresh automatically.
+
 ### Dashboard Data Fetching
-The dashboard uses Payload's **Local API** (in-process function calls) with `overrideAccess: true`. This runs exclusively on the server — no API keys are sent to the browser, and no HTTP requests are made for dashboard rendering.
+Read operations use Payload's **Local API** (in-process function calls) with `overrideAccess: true`. This runs exclusively on the server — no API keys are sent to the browser, and no HTTP requests are made for dashboard rendering.
 
 ### Dashboard Pages
 
 | Page | Route | Description |
 |---|---|---|
-| Dashboard | `/` | Time-based greeting, stat cards, recent tasks |
-| Tasks | `/tasks` | Full task list with filters, search, sort, pagination |
-| Task Detail | `/tasks/[id]` | Hero header, progress tracker, metadata grid |
-| Projects | `/projects` | Project grid with task counts and completion bars |
-| Project Detail | `/projects/[id]` | Project info + associated tasks |
+| Dashboard | `/` | Greeting, stat cards, recent tasks, quick actions, AI widget |
+| Tasks | `/tasks` | Task list with filters, search, sort, pagination + **New Task** button |
+| Task Detail | `/tasks/[id]` | Hero header, progress tracker, metadata — **Edit** and **Delete** in-page |
+| Projects | `/projects` | Project grid with task counts and completion bars + **New Project** button |
+| Project Detail | `/projects/[id]` | Project info + task list — **Add Task**, **Delete Project** in-page |
 | Users | `/users` | User list with role badges and API key status |
-| Analytics | `/analytics` | Donut, bar, area charts + completion ring |
-| Activity | `/activity` | Vertical timeline of task changes |
-| Settings | `/settings` | App info, API docs, theme toggle |
+| Analytics | `/analytics` | Donut, bar, trend, and priority charts + completion ring |
+| Activity | `/activity` | Vertical timeline of field-level changes (before/after diffs) |
+| Visitors | `/visitors` | Visit counts, device breakdown, browser stats, recent visits table |
+| Settings | `/settings` | App info, API endpoints, dark mode toggle |
+
+### Inline Task & Project Actions
+
+Users can perform all CRUD operations from the dashboard without accessing the admin panel:
+
+| Action | Where | How |
+|---|---|---|
+| Create task | Tasks page header, Quick Actions, Project detail | Slide-in drawer with all fields |
+| Edit task | Task detail page | Slide-in drawer pre-populated |
+| Change task status | Any task card | Click status icon to cycle: To Do → In Progress → Completed |
+| Delete task | Task detail page | Confirm dialog → redirects to /tasks |
+| Create project | Projects page header, Quick Actions | Slide-in drawer with live color preview |
+| Delete project | Project detail page | Confirm dialog → redirects to /projects |
+| Add task to project | Project detail — Tasks section | Drawer pre-set to current project |
+
+### Drawer Components
+```
+src/components/drawers/
+├── CreateTaskDrawer.tsx      # Slide-in: title, description, status, priority, due date, project
+├── EditTaskDrawer.tsx        # Same fields pre-populated, status as button group
+├── CreateProjectDrawer.tsx   # Name, description, 8-color picker, live gradient preview
+└── DeleteConfirmDialog.tsx   # Animated confirm modal with cancel/confirm
+```
+
+### Audit Trail
+Every task and project change is logged to the `ActivityLogs` collection with field-level before/after values. Visible on the `/activity` page as a timestamped, grouped timeline.
 
 ### UI Features
 - Collapsible sidebar with gold active indicator
 - Mobile bottom tab navigation (< 768px)
 - URL-synced filters (bookmarkable/shareable)
+- Slide-in drawer animations (Framer Motion spring)
+- Optimistic status toggle on task cards (instant UI + revert on error)
 - Staggered Framer Motion animations on cards and charts
 - Skeleton loading states
-- Error boundaries with 401/403 detection
 - Dark mode toggle (localStorage persistence)
 - Click-to-copy API endpoint blocks
-- Overdue task badges
+- Overdue task badges with day count
 - Responsive grid layouts (mobile/tablet/desktop)
+- Arabic / English language toggle (RTL-aware layout)
+- Oasis AI assistant drawer (streaming chat + rotating insights)
 
 ---
 
 ## Part 3: Bonus
 
 - **Modern UI/UX**: Custom color palette (#092421 primary, #e3ba54 gold accent), Tailwind CSS, Framer Motion page transitions and card animations
+- **Oasis AI**: Embedded intelligent assistant with streaming chat and live platform data context
+- **Real Visitor Analytics**: IP-based visit tracking with device/browser detection, geographic data
+- **Full Activity Audit Trail**: Field-level change tracking on all mutations
 - **Deployment-Ready**: Multi-stage Dockerfile, environment variable configuration, Dokploy hosting
 - **Security Brief**: Comprehensive documentation of the authentication architecture (see `SECURITY_BRIEF.md`)
 
@@ -167,7 +216,7 @@ The dashboard uses Payload's **Local API** (in-process function calls) with `ove
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/OasisTech.git
+git clone https://github.com/Jasevo/oasistech.git
 cd OasisTech
 ```
 
@@ -193,6 +242,9 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 # Optional: pre-generated API key (or create via admin panel)
 TASK_ENGINE_API_KEY=
+
+# Oasis AI service key (optional — Oasis AI features degrade gracefully without it)
+GROQ_API_KEY=
 ```
 
 ### 3. Install Dependencies
@@ -222,8 +274,13 @@ The app will be available at:
 4. Copy the API key for REST API usage
 
 ### 7. Seed Sample Data
-1. In the admin panel, create 2–3 **Projects** (e.g., "Website Redesign", "API Integration", "Security Audit")
-2. Create 5–10 **Tasks** with varying statuses, priorities, due dates, and project assignments
+Use the built-in seed script to populate sample projects and tasks:
+```bash
+npm run seed
+```
+Or manually:
+1. In the admin panel, create 2–3 **Projects** (e.g., "Website Redesign", "API Integration")
+2. Create tasks via the dashboard **New Task** button or admin panel
 3. Visit the dashboard to see stats, charts, and activity populated
 
 ---
@@ -284,6 +341,7 @@ Configure these in Dokploy's environment settings (never in the Docker image):
 | `DASHBOARD_USER_NAME` | Greeting display name |
 | `NEXT_PUBLIC_APP_URL` | Production URL (`https://oasistech.jasevo.com`) |
 | `TASK_ENGINE_API_KEY` | Optional pre-set API key |
+| `GROQ_API_KEY` | Oasis AI service key |
 
 ### Production Checklist
 - [ ] `PAYLOAD_SECRET` is a cryptographically random 32+ character string
@@ -310,22 +368,29 @@ See [SECURITY_BRIEF.md](SECURITY_BRIEF.md) for the full security architecture, c
 
 ```
 apps/task-engine/src/
+├── actions/
+│   ├── tasks.ts                # createTask, updateTask, updateTaskStatus, deleteTask
+│   └── projects.ts             # createProject, updateProject, deleteProject
 ├── app/
 │   ├── (frontend)/
 │   │   ├── layout.tsx              # Shell layout (sidebar + topbar)
 │   │   ├── page.tsx                # Dashboard overview
 │   │   ├── tasks/
-│   │   │   ├── page.tsx            # Task list with filters
-│   │   │   ├── [id]/page.tsx       # Task detail view
-│   │   │   ├── loading.tsx         # Skeleton loader
-│   │   │   └── error.tsx           # Error boundary
+│   │   │   ├── page.tsx            # Task list with filters + New Task button
+│   │   │   └── [id]/page.tsx       # Task detail — edit + delete in-page
 │   │   ├── projects/
-│   │   │   ├── page.tsx            # Project grid
-│   │   │   └── [id]/page.tsx       # Project detail
+│   │   │   ├── page.tsx            # Project grid + New Project button
+│   │   │   └── [id]/page.tsx       # Project detail — add task + delete in-page
 │   │   ├── users/page.tsx          # Users list
 │   │   ├── analytics/page.tsx      # Charts dashboard
 │   │   ├── activity/page.tsx       # Activity timeline
+│   │   ├── visitors/page.tsx       # Visitor analytics
 │   │   └── settings/page.tsx       # App settings
+│   ├── api/
+│   │   ├── activity/route.ts       # Combined activity feed
+│   │   ├── oasis-ai/route.ts       # Oasis AI streaming endpoint
+│   │   ├── search/route.ts         # Global task + project search
+│   │   └── visit/route.ts          # Visit tracking
 │   ├── (payload)/
 │   │   ├── admin/[[...segments]]/  # Payload admin panel
 │   │   └── api/[...slug]/          # REST API routes
@@ -334,23 +399,35 @@ apps/task-engine/src/
 ├── collections/
 │   ├── Tasks.ts
 │   ├── Projects.ts
-│   └── ApiUsers.ts
+│   ├── ApiUsers.ts
+│   └── SiteVisits.ts
 ├── components/
+│   ├── drawers/                    # CreateTaskDrawer, EditTaskDrawer, CreateProjectDrawer, DeleteConfirmDialog
 │   ├── layout/                     # Shell, Sidebar, TopBar, BottomNav
-│   ├── ui/                         # StatusBadge, PriorityBadge, Skeleton, etc.
+│   ├── ui/                         # StatusBadge, PriorityBadge, Skeleton, EmptyState, etc.
 │   ├── charts/                     # StatusDonut, ProjectBar, TrendLine, CompletionRing
-│   ├── TaskCard.tsx, TaskList.tsx, TaskFilters.tsx
-│   ├── ProjectCard.tsx, ProjectFilters.tsx
+│   ├── ai/                         # OasisAIDrawer, DashboardAIWidget, AIInputHelper (Oasis AI)
+│   ├── TaskCard.tsx, TaskList.tsx, TaskFilters.tsx, TasksPageHeader.tsx
+│   ├── TaskDetailView.tsx
+│   ├── ProjectCard.tsx, ProjectFilters.tsx, ProjectsPageHeader.tsx
+│   ├── ProjectDetailView.tsx
 │   ├── UserRow.tsx, UserFilters.tsx
 │   ├── AnalyticsDashboard.tsx
 │   ├── ActivityTimeline.tsx
+│   ├── VisitorsDashboard.tsx
 │   ├── SettingsPanel.tsx
 │   ├── StatsCards.tsx
 │   └── Greeting.tsx
+├── context/
+│   ├── AIContext.tsx               # AI drawer open/close state
+│   └── LanguageContext.tsx         # EN/AR toggle + t() helper
+├── hooks/
+│   └── logActivity.ts              # Payload afterChange/afterDelete hooks
 └── lib/
     ├── payload.ts                  # getPayload singleton
     ├── tasks.ts                    # Task queries (Local API)
     ├── projects.ts                 # Project queries
     ├── users.ts                    # User queries
-    └── analytics.ts                # Analytics aggregation
+    ├── analytics.ts                # Analytics aggregation
+    └── visits.ts                   # Visit stats queries
 ```
